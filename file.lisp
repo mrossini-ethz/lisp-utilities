@@ -8,10 +8,10 @@
       content)))
 (export 'read-file-to-string)
 
-(defun read-lines-to-linevector (filename)
+(defun read-lines-to-vector (filename &optional (trim-eol t))
   ;; Reads the lines of a file into a vector
   (with-open-file (f filename)
-    (apply #'vector (loop for line = (read-line f nil nil) while line collect line))))
+    (apply #'vector (loop for line = (read-line f nil nil) while line collect (if trim-eol (string-right-trim '(#\Newline #\Return) line) line)))))
 (export 'read-lines-to-linevector)
 
 (defun write-file-from-string (filename content &key if-exists if-does-not-exist)
@@ -19,6 +19,28 @@
   (with-open-file (file filename :direction :output :if-exists if-exists :if-does-not-exist if-does-not-exist)
     (write-sequence content file)))
 (export 'write-file-from-string)
+
+(defun write-file-from-lines (filename line-seq &key (if-exists :error) (if-does-not-exist :create))
+  "Writes the sequence of lines into a file."
+  (with-open-file (file filename :direction :output :if-exists if-exists :if-does-not-exist if-does-not-exist)
+    (loop for i below (length line-seq) do
+      (write-line (elt line-seq i) file))))
+(export 'write-file-from-lines)
+
+(defmacro iterate-lines ((var stream &optional (trim-eol t)) &body body)
+  (let ((handle (gensym)))
+    `(let ((,handle ,stream))
+       (do (,var) ((not (setf ,var (read-line ,handle nil))))
+         ,@(if trim-eol `((setf ,var (string-right-trim '(#\Newline #\Return) ,var))))
+         ,@body))))
+(export 'iterate-lines)
+
+(defmacro iterate-file ((var filename &optional (trim-eol t)) &body body)
+  (let ((handle (gensym)))
+    `(with-open-file (,handle ,filename)
+       (iter-lines (,var ,handle ,trim-eol)
+         ,@body))))
+(export 'iterate-file)
 
 (defun update-file-from-string (path content &key (if-does-not-exist :create))
   "Updates a file only if the new content is different."
