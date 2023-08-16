@@ -38,7 +38,7 @@
 (defmacro iterate-file ((var filename &optional (trim-eol t)) &body body)
   (let ((handle (gensym)))
     `(with-open-file (,handle ,filename)
-       (iter-lines (,var ,handle ,trim-eol)
+       (iterate-lines (,var ,handle ,trim-eol)
          ,@body))))
 (export 'iterate-file)
 
