@@ -10,6 +10,7 @@
                (:file "sequence" :depends-on ("package"))
                (:file "statistics" :depends-on ("package"))
                (:file "string" :depends-on ("package"))
+               (:file "binding" :depends-on ("package" "lists"))
                (:file "symbols" :depends-on ("package" "string"))
                (:file "macros" :depends-on ("package"))
                (:file "debug" :depends-on ("package" "macros"))
