@@ -32,36 +32,15 @@
 
   (defun empty-string-p (str)
     (zerop (length str)))
-)
 
-(defun split (list string delimiter delimiter-length)
-  (declare (optimize (speed 3) (safety 0)))
-  (declare (type simple-string string delimiter))
-  (declare (type fixnum delimiter-length))
-  (let (pos)
-    (setf pos (search delimiter string))
-    (if (null pos)
-        (append-1 list string)
-        (split (append-1 list (subseq string 0 pos)) (subseq string (+ pos delimiter-length)) delimiter delimiter-length))))
+  (defun strtrim (str)
+    (string-trim '(#\newline #\space) str))
 
-;(disassemble 'split)
-;(split nil "abcikbb3bsdfsdb2" "b" 1)
-
-;(defun str-split (string delimiter)
-;  (flet ((split (list string delimiter)
-;           if (search
-
-;(strsplit "abcbd" "b")
-
-(defun strtrim (str)
-  (string-trim '(#\newline #\space) str))
-(export 'strtrim)
-
-(defmacro multiline-format (stream &body lines)
-  `(progn
-     ,@(loop for line in lines append
+  (defmacro multiline-format (stream &body lines)
+    `(progn
+       ,@(loop for line in lines append
             (list (if (listp line)
                       `(format ,stream ,@line)
                       `(format ,stream ,line))
                   `(terpri ,stream)))))
-(export 'multiline-format)
+)
