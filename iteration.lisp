@@ -48,16 +48,18 @@
        ,@body))
 
   (defmacro do-until (condition &body body)
-    `(progn
-       ,@body
-       (until ,condition
-         ,@body)))
+    `(with-escape break
+       (progn
+         (with-escape continue ,@body)
+         (do () (,condition)
+           (with-escape continue ,@body)))))
 
   (defmacro do-while (condition &body body)
-    `(progn
-       ,@body
-       (while ,condition
-         ,@body)))
+    `(with-escape break
+       (progn
+         (with-escape continue ,@body)
+         (do () ((not ,condition))
+           (with-escape continue ,@body)))))
 
   (defmacro while-let (variable condition expression &body body)
     `(let ((,variable ,expression))
