@@ -39,8 +39,9 @@
            ,@body))))
 
   (defmacro until (condition &body body)
-    `(do () (,condition)
-       ,@body))
+    `(with-escape break
+       (do () (,condition)
+         (with-escape continue ,@body))))
 
   (defmacro while (condition &body body)
     `(until (not ,condition)
@@ -65,7 +66,7 @@
          (setf ,variable ,expression))))
 
   (defmacro forever (&body body)
-    `(do () (nil) ,@body))
+    `(until nil ,@body))
 
   (defmacro cloop (&rest keywords-and-forms)
     `(apply #'append (loop ,@keywords-and-forms)))
