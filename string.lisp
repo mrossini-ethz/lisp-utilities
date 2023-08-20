@@ -36,6 +36,16 @@
   (defun strtrim (str)
     (string-trim '(#\newline #\return #\space #\tab) str))
 
+  (defun string^= (string beginning)
+    "Tests whether 'string' begins with 'beginning'"
+    (let ((n (length string)) (m (length beginning)))
+      (and (>= n m) (string= (subseq string 0 m) beginning))))
+
+  (defun string$= (string ending)
+    "Tests whether 'string' ends with 'ending'"
+    (let ((n (length string)) (m (length ending)))
+      (and (>= n m) (string= (subseq string (- n m)) ending))))
+
   (defmacro multiline-format (stream &body lines)
     `(progn
        ,@(loop for line in lines append
