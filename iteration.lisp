@@ -40,11 +40,23 @@
 
   (defmacro until (condition &body body)
     `(do () (,condition)
-      ,@body))
+       ,@body))
 
   (defmacro while (condition &body body)
     `(until (not ,condition)
-      ,@body))
+       ,@body))
+
+  (defmacro do-until (condition &body body)
+    `(progn
+       ,@body
+       (until ,condition
+         ,@body)))
+
+  (defmacro do-while (condition &body body)
+    `(progn
+       ,@body
+       (while ,condition
+         ,@body)))
 
   (defmacro forever (&body body)
     `(do () (nil) ,@body))
