@@ -58,6 +58,12 @@
        (while ,condition
          ,@body)))
 
+  (defmacro while-let (variable condition expression &body body)
+    `(let ((,variable ,expression))
+       (while ,condition
+         ,@body
+         (setf ,variable ,expression))))
+
   (defmacro forever (&body body)
     `(do () (nil) ,@body))
 
