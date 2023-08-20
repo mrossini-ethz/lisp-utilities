@@ -23,5 +23,17 @@
                (:file "arithmetic" :depends-on ("package"))
                (:file "io" :depends-on ("package"))
                (:file "import" :depends-on ("package"))
-               (:file "hash-table" :depends-on ("package"))
-               ))
+               (:file "hash-table" :depends-on ("package")))
+  :in-order-to ((test-op (test-op :utils/test))))
+
+(defsystem "utils/test"
+  :description "Unit Tests for Utilities"
+  :version "0.1"
+  :author "Marco Rossini"
+  :depends-on (:utils :fiveam)
+  :serial t
+  :components ((:file "test/test")
+               (:file "test/string-test")))
+
+(defmethod perform ((operation test-op) (system (eql (find-system :utils/test))))
+  (funcall (intern "UTILS-TEST")))

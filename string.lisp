@@ -31,7 +31,7 @@
     (apply #'strjoin (append (list (make-string 1 :initial-element #\newline)) strings)))
 
   (defun empty-string-p (str)
-    (zerop (length str)))
+    (and (stringp str) (zerop (length str))))
 
   (defun strtrim (str)
     (string-trim '(#\newline #\return #\space #\tab) str))
