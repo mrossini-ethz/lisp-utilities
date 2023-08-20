@@ -23,8 +23,7 @@
 
   (defun strjoin (separator &rest strings)
     "Joins multiple strings, separated with the 'separator' sequence."
-    (let ((result (if strings (first strings) "")) len)
-      (setf len (list-length strings))
+    (let ((result (if strings (first strings) "")))
       (dolist (str (rest strings) result)
         (setf result (concatenate 'string result separator str)))))
 
@@ -39,7 +38,6 @@
   (declare (optimize (speed 3) (safety 0)))
   (declare (type simple-string string delimiter))
   (declare (type fixnum delimiter-length))
-  (declare (inline append-1))
   (let (pos)
     (setf pos (search delimiter string))
     (if (null pos)

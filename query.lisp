@@ -41,8 +41,8 @@
 (defun query-text (file &key text) 
   (let ((editor (sb-ext:posix-getenv "EDITOR")) process)
     (when text
-      (write-file file text :if-does-not-exist :create))
+      (write-file-from-string file text :if-does-not-exist :create))
     (loop until (and process (zerop (sb-ext:process-exit-code process))) do
          (setf process (sb-ext:run-program editor (list file) :search t :wait t :output t :input t :error t)))
-    (read-file file)))
+    (read-file-to-string file)))
 (export 'query-text)

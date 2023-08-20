@@ -46,10 +46,10 @@
   "Updates a file only if the new content is different."
   (let (previous-content)
     ;; Read possibly existing file for comparison with new content
-    (setf previous-content (read-file path)) ;; FIXME: problem when file does not exits
+    (setf previous-content (read-file-to-string path)) ;; FIXME: problem when file does not exits
     ;; Write new content if it is not identical
     (unless (string= previous-content content)
-      (write-file path content :if-exists :overwrite :if-does-not-exist if-does-not-exist))))
+      (write-file-from-string path content :if-exists :overwrite :if-does-not-exist if-does-not-exist))))
 (export 'update-file-from-string)
 
 (defun random-temporary-filename (&key (name-length 8) (dir "/tmp") (prefix ""))

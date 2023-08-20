@@ -22,25 +22,25 @@
     (if (listp obj) obj (list obj)))
 
   ;; Family of functions that test the length of a list without iterating through all members
-  (proclaim '(inline l/= l<= l>= single))
+  (proclaim '(inline l/= l<= l>= single ll/= ll< ll<= ll>=))
   (defun l= (list length)
     "Tests efficiently whether the length of the list is equal to the given length."
     (cond
       ((null list) (= 0 length))
       ((zerop length) (null list))
       (t (l= (rest list) (- length 1)))))
-  
+
   (defun l/= (list length)
     "Tests efficiently whether the length of the list is different from the given length."
     (not (l= list length)))
-  
+
   (defun l> (list length)
     "Tests efficiently whether the length of the list is greater than the given length."
     (cond
       ((null list) nil)
       ((zerop length) (consp list))
       (t (l> (rest list) (- length 1)))))
-  
+
   (defun l<= (list length)
     "Tests efficiently whether the length of the list is smaller or equal to the given length."
     (not (l> list length)))
@@ -51,7 +51,7 @@
       ((null list) (plusp length))
       ((zerop length) nil)
       (t (l< (rest list) (- length 1)))))
-  
+
   (defun l>= (list length)
     "Tests efficiently whether the length of the list is greater or equal to the given length."
     (not (l< list length)))
@@ -60,7 +60,6 @@
     (l= list 1))
 
   ;; Family of functions that test the lengths of two lists against each other without iterating through all members
-  (proclaim '(inline ll/= ll< ll<= ll>=))
   (defun ll= (list-a list-b)
     "Tests efficiently whether the length of list-a is equal to the length of list-b."
     (if (nand list-a list-b)
@@ -130,7 +129,7 @@
   (defun same (test sequence &key (key #'identity))
     ;; Checks whether every item in the sequence is the same according to test (using key)
     (every #'(lambda (x) (funcall test (funcall key x) (funcall key (first sequence)))) sequence))
-  
+
   (defun have (item sequence &key (test #'eql) (key #'identity))
     ;; Checks whether the given item is in the list
     (some #'(lambda (x) (funcall test item (funcall key x))) sequence))
