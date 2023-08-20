@@ -7,7 +7,7 @@
   :components ((:file "package")
                (:file "file" :depends-on ("package"))
                (:file "random" :depends-on ("package"))
-               (:file "sequence" :depends-on ("package"))
+               (:file "sequence" :depends-on ("package" "macros"))
                (:file "statistics" :depends-on ("package"))
                (:file "string" :depends-on ("package"))
                (:file "binding" :depends-on ("package" "lists"))
