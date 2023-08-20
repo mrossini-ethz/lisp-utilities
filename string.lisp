@@ -34,7 +34,7 @@
     (zerop (length str)))
 
   (defun strtrim (str)
-    (string-trim '(#\newline #\space) str))
+    (string-trim '(#\newline #\return #\space #\tab) str))
 
   (defmacro multiline-format (stream &body lines)
     `(progn
