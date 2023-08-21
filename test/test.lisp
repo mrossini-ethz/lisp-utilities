@@ -1,6 +1,6 @@
 (use-package :fiveam)
 
-(fiveam:def-suite utils-test)
+(fiveam:def-suite utils)
 
 (defun utils-test ()
-  (fiveam:run! 'utils-test))
+  (fiveam:run! 'utils))
