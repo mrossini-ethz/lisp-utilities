@@ -33,7 +33,7 @@
   :depends-on (:utils :fiveam)
   :serial t
   :components ((:file "test/test")
-               (:file "test/string-test")))
+               (:file "test/test-string")))
 
 (defmethod perform ((operation test-op) (system (eql (find-system :utils/test))))
   (funcall (intern "UTILS-TEST")))
