@@ -25,3 +25,35 @@
         (* m (sqrt (- (expt (/ hypotenuse m) 2) (loop for n in kathetes sum (expt (/ n m) 2)))))
         0.0)))
 (export 'kath)
+
+(defun rad->deg (x)
+  (* x (/ 180 pi)))
+(export 'rad->deg)
+
+(defun deg->rad (x)
+  (* x (/ pi 180)))
+(export 'deg->rad)
+
+(defun sind (x)
+  (sin (* x (/ pi 180))))
+(export 'sind)
+
+(defun cosd (x)
+  (cos (* x (/ pi 180))))
+(export 'cosd)
+
+(defun tand (x)
+  (tan (* x (/ pi 180))))
+(export 'tand)
+
+(defun asind (x)
+  (* (asin x) (/ 180 pi)))
+(export 'asind)
+
+(defun acosd (x)
+  (* (acos x) (/ 180 pi)))
+(export 'acosd)
+
+(defun atand (y &optional (x 1))
+  (* (atan y x) (/ 180 pi)))
+(export 'atand)
