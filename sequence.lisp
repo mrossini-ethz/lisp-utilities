@@ -25,4 +25,23 @@
     ;; FIXME: very inefficient
     ;; FIXME: works only for lists
     (loop for n from 1 for item in seq when (find item seq :start n :test test :key key) do (return nil) finally (return t)))
+
+  (defun same (test sequence &key (key #'identity))
+    ;; Checks whether every item in the sequence is the same according to test (using key)
+    (let ((first (funcall key (elt sequence 0))))
+      (every #'(lambda (x) (funcall test (funcall key x) first)) sequence)))
+
+  (defun have (item sequence &key (test #'eql) (key #'identity))
+    ;; Checks whether the given item is in the list
+    (some #'(lambda (x) (funcall test item (funcall key x))) sequence))
+
+  (defun remove-nth (n sequence)
+    (let ((len (length sequence)))
+      (when (or (minusp n) (>= n len))
+        (error "Unable to remove element ~a in a list of length ~a" n len))
+      (typecase sequence
+        (list (append (subseq sequence 0 n) (if (l> sequence (1+ n)) (subseq sequence (1+ n)))))
+        (string (concatenate 'string (subseq sequence 0 n) (subseq sequence (1+ n))))
+        (vector (concatenate 'vector (subseq sequence 0 n) (subseq sequence (1+ n))))
+        (t (error "Unable to remove item in sequence of type ~a" (type-of sequence))))))
 )

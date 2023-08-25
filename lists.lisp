@@ -22,7 +22,8 @@
     (if (listp obj) obj (list obj)))
 
   ;; Family of functions that test the length of a list without iterating through all members
-  (proclaim '(inline l/= l<= l>= single ll/= ll< ll<= ll>=))
+  (eval-when (:compile-toplevel)
+      (proclaim '(inline l/= l<= l>= single ll/= ll< ll<= ll>=)))
   (defun l= (list length)
     "Tests efficiently whether the length of the list is equal to the given length."
     (cond
@@ -37,6 +38,7 @@
   (defun l> (list length)
     "Tests efficiently whether the length of the list is greater than the given length."
     (cond
+      ((minusp length) (listp list))
       ((null list) nil)
       ((zerop length) (consp list))
       (t (l> (rest list) (- length 1)))))
@@ -125,18 +127,5 @@
                                  acc
                                  (cons (car tree) acc)))))))
       (rec tree nil)))
-
-  (defun same (test sequence &key (key #'identity))
-    ;; Checks whether every item in the sequence is the same according to test (using key)
-    (every #'(lambda (x) (funcall test (funcall key x) (funcall key (first sequence)))) sequence))
-
-  (defun have (item sequence &key (test #'eql) (key #'identity))
-    ;; Checks whether the given item is in the list
-    (some #'(lambda (x) (funcall test item (funcall key x))) sequence))
-
-  (defun remove-nth (n list)
-    (if (list-index-valid-p n list)
-        (append (subseq list 0 n) (if (l> list (1+ n)) (subseq list (1+ n))))
-        list))
   )
 
