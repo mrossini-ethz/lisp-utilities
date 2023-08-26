@@ -63,6 +63,16 @@
         (+ mean (* (* (sqrt (* -2 (log u1))) (cos (* 2 pi u2))) stdev)))))
 (export 'random-gauss)
 
+(defun random-list (n random-function &rest function-args)
+  (loop for i below n collect (apply random-function function-args)))
+(export 'random-list)
+
+(defun random-vector (n random-function &rest function-args)
+  (let ((result (make-array (list n) :element-type 'double-float)))
+    (loop for i below n do (setf (elt result i) (apply random-function function-args)))
+    result))
+(export 'random-vector)
+
 (defun random-hash (&optional (length 8))
   (loop for i below length collect (random 256)))
 (export 'random-hash)
