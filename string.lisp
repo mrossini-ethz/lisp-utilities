@@ -11,15 +11,27 @@
 
   (defun strsplit (str delimiter)
     "Splits the string at each occurrence of `delimiter'."
-    (let (seq (pos 0) newpos (len (length str)))
-      (do () ((>= pos len) seq)
-        (setf newpos (search delimiter str :start2 pos))
-        (unless newpos
-          (setf newpos len))
-        (when (/= newpos pos)
-          (setf seq (append seq (list (subseq str pos newpos)))))
-        (setf pos (+ newpos (length delimiter))))
-      (if seq seq '(""))))
+    (typecase delimiter
+      (string
+       (let ((pos (search delimiter str)) (len (length delimiter)))
+         (if pos
+             (append (list (subseq str 0 pos)) (strsplit (subseq str (+ pos len)) delimiter))
+             (list str))))
+      (character
+       (let ((pos (position delimiter str)))
+         (if pos
+             (append (list (subseq str 0 pos)) (strsplit (subseq str (1+ pos)) delimiter))
+             (list str))))
+      (list
+       (let ((pos (position-if (lambda (c) (some (lambda (x) (char= x c)) delimiter)) str)))
+         (if pos
+             (append (list (subseq str 0 pos)) (strsplit (subseq str (1+ pos)) delimiter))
+             (list str))))
+      (function
+       (let ((pos (position-if delimiter str)))
+         (if pos
+             (append (list (subseq str 0 pos)) (strsplit (subseq str (1+ pos)) delimiter))
+             (list str))))))
 
   (defun strjoin (separator &rest strings)
     "Joins multiple strings, separated with the 'separator' sequence."
