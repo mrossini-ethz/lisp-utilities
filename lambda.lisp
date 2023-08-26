@@ -32,10 +32,23 @@
             (or (funcall fn x) (funcall chain x))))))
 (export 'fun)
 
-(defun string=p (str)
+;; --- Specific filter functions ------------------------------------------------------------
+
+(defun fstring (str)
   "Creates a lambda function for use as a predicate that needs more than one argument."
-  #'(lambda (x) (string= str x)))
-(export 'string=p)
+  (lambda (x) (string= str x)))
+(export 'fstring)
+
+(defun fsubstr (substr &key (test #'char=))
+  (lambda (x) (search substr x :test test)))
+(export 'fsubstr)
+
+(defun fchar (chr)
+  "Creates a lambda function for use as a predicate that needs more than one argument."
+  (lambda (x) (char= chr x)))
+(export 'fchar)
+
+;; --- Generic filter functions -------------------------------------------------------------
 
 (defun unary-r (function arg)
   #'(lambda (x) (funcall function arg x)))
