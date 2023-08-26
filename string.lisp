@@ -46,6 +46,9 @@
     (let ((n (length string)) (m (length ending)))
       (and (>= n m) (string= (subseq string (- n m)) ending))))
 
+  (defun substrp (substring string &key (test #'char=))
+    (search substring string :test test))
+
   (defmacro multiline-format (stream &body lines)
     `(progn
        ,@(loop for line in lines append
