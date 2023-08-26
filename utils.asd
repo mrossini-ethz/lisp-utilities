@@ -19,6 +19,7 @@
                (:file "iteration" :depends-on ("package" "macros"))
                (:file "query" :depends-on ("package"))
                (:file "lambda" :depends-on ("package"))
+               (:file "anaphoric" :depends-on ("package"))
                (:file "test-framework" :depends-on ("package"))
                (:file "arithmetic" :depends-on ("package"))
                (:file "io" :depends-on ("package"))
