@@ -15,6 +15,7 @@
                (:file "macros" :depends-on ("package"))
                (:file "debug" :depends-on ("package" "macros"))
                (:file "logic" :depends-on ("package"))
+               (:file "integer" :depends-on ("package"))
                (:file "lists" :depends-on ("package" "logic"))
                (:file "iteration" :depends-on ("package" "macros"))
                (:file "query" :depends-on ("package"))
