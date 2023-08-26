@@ -11,6 +11,9 @@
   (defun append-1 (list obj)
     (append list (list obj)))
 
+  (defun prepend-1 (list obj)
+    (append (list obj) list))
+
   ;; Graham
   (defun last-1 (list)
     "Retrieves the last item from the given list."
