@@ -74,7 +74,7 @@
   (defun remove-nth (n sequence)
     (let ((len (length sequence)))
       (when (or (minusp n) (>= n len))
-        (error "Unable to remove element ~a in a list of length ~a" n len))
+        (error "Unable to remove element ~a in a sequence of length ~a" n len))
       (typecase sequence
         (list (append (subseq sequence 0 n) (if (l> sequence (1+ n)) (subseq sequence (1+ n)))))
         (string (concatenate 'string (subseq sequence 0 n) (subseq sequence (1+ n))))
