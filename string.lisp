@@ -9,7 +9,7 @@
     "Concatenates the given strings"
     (apply #'concatenate 'string strings))
 
-  (defun strsplit (str delimiter)
+  (defun strsplit (str &optional (delimiter '(#\Space #\Tab)))
     "Splits the string at each occurrence of `delimiter'."
     (typecase delimiter
       (string
