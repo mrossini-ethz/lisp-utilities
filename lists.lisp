@@ -94,6 +94,9 @@
   (defun list-index-valid-p (index list)
     (and (>= index 0) (l> list index)))
 
+  (defun list-flat-p (list)
+    (or (null list) (and (not (consp (car list))) (list-flat-p (cdr list)))))
+
   ;; Graham
   (defun group (source n)
     "Groups the source list into sublists of length n."
@@ -128,4 +131,3 @@
                                  (cons (car tree) acc)))))))
       (rec tree nil)))
   )
-
