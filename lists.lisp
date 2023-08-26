@@ -130,4 +130,7 @@
                                  acc
                                  (cons (car tree) acc)))))))
       (rec tree nil)))
+
+  (defmacro list-comp (var list &body body)
+    `(mapcar (lambda (,var) ,@body) ,list))
   )
