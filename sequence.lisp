@@ -80,4 +80,20 @@
         (string (concatenate 'string (subseq sequence 0 n) (subseq sequence (1+ n))))
         (vector (concatenate 'vector (subseq sequence 0 n) (subseq sequence (1+ n))))
         (t (error "Unable to remove item in sequence of type ~a" (type-of sequence))))))
+
+  (defun copy-sequence (sequence)
+    (concatenate (type-of sequence) sequence))
+
+  (defun remove-if-index (test sequence)
+    (let ((n (length sequence)) (m 0) result)
+      ;; Determine number of items for resulting sequence
+      (loop for i below n when (funcall test i) do (incf m))
+      ;; Create sequence of same type with the right number of items
+      (setf result (make-sequence (type-of sequence) (- n m)))
+      ;; Copy the elements
+      (loop for i below n for x = (funcall test i) with j = 0 when (not x) do
+        (setf (elt result j) (elt sequence i))
+        (incf j))
+      ;; Return it
+      result))
 )
