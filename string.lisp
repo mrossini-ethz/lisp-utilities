@@ -57,3 +57,28 @@
                       `(format ,stream ,line))
                   `(terpri ,stream)))))
 )
+
+(defun parse-float (float-str)
+  (let ((pre-decimal 0) (post-decimal 0) (exponent 0))
+    ;; Get the exponent (if it exists)
+    (let ((pos (position #\e float-str :test #'char-equal)))
+      (when pos
+        (handler-case
+            (setf exponent (parse-integer (subseq float-str (1+ pos))))
+          (t () (error "Error parsing exponent")))
+        (setf float-str (subseq float-str 0 pos))))
+    ;; Get the decimals (if they exist)
+    (let ((pos (position #\. float-str :test #'char=)))
+      (when pos
+        (let ((substr (subseq float-str (1+ pos))))
+          (unless (every #'digit-char-p substr)
+            (error "Error parsing decimals"))
+          (when (plusp (length substr))
+            (handler-case
+                (setf post-decimal (* (parse-integer (subseq float-str (1+ pos))) (expt 10d0 (- pos -1 (length float-str)))))
+              (t () (error "Error parsing decimal number"))))
+          (setf float-str (subseq float-str 0 pos)))))
+    ;; Get the integer before the decimal point
+    (when (plusp (length float-str))
+      (setf pre-decimal (parse-integer float-str)))
+    (* (+ pre-decimal post-decimal) (expt 10d0 exponent))))
