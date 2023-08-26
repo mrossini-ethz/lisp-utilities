@@ -46,6 +46,11 @@
     (loop for i in (random-unique-indices num (list-length list) :random-order random-order) collect (nth i list)))
   )
 
+(defun nonzero-random (arg)
+  (let ((result (random arg)))
+    (do () ((plusp result) result)
+      (setf result (random arg)))))
+
 (defparameter *random-gauss-save* nil)
 
 (defun random-gauss (mean stdev)
@@ -53,7 +58,7 @@
       (prog1
           *random-gauss-save*
         (setf *random-gauss-save* nil))
-      (let ((u1 (random 1d0)) (u2 (random 1d0)))
+      (let ((u1 (nonzero-random 1d0)) (u2 (nonzero-random 1d0)))
         (setf *random-gauss-save* (* (sqrt (* -2 (log u1))) (sin (* 2 pi u2))))
         (+ mean (* (* (sqrt (* -2 (log u1))) (cos (* 2 pi u2))) stdev)))))
 (export 'random-gauss)
