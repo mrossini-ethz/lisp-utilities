@@ -37,11 +37,15 @@
   #'(lambda (x) (string= str x)))
 (export 'string=p)
 
-(defun unary (function arg)
-  #'(lambda (x) (funcall function x arg)))
-(export 'unary)
+(defun unary-r (function arg)
+  #'(lambda (x) (funcall function arg x)))
+(export 'unary-r)
 
-(defun lambda-arg (function &rest args)
-  "Creates a lambda function of one argument that calls a function with multiple arguments. Useful examples: (lambda-arg #'> 0)"
-  #'(lambda (x) (apply function x args)))
+(defun unary-l (function arg)
+  #'(lambda (x) (funcall function x arg)))
+(export 'unary-l)
+
+(defun lambda-arg (function nth &rest args)
+  "Creates a lambda function of one argument that calls a function with multiple arguments."
+  #'(lambda (x) (apply function (append (subseq args 0 nth) (list x) (subseq args nth)))))
 (export 'lambda-arg)
