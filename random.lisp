@@ -10,7 +10,7 @@
   (defun random-select (seq)
     ;; Randomly selects an item from the given sequence
     (elt seq (random (length seq))))
-  
+
   (defun random-select-multiple (seq num)
     ;; Randomly selects `num' items fom the given sequence. Duplicate selection is possible.
     (loop for i below num collect (random-select seq)))
@@ -44,8 +44,19 @@
   (defun random-subset (list num &key random-order)
     "Returns a random subset of the given list with `num' items."
     (loop for i in (random-unique-indices num (list-length list) :random-order random-order) collect (nth i list)))
-
   )
+
+(defparameter *random-gauss-save* nil)
+
+(defun random-gauss (mean stdev)
+  (if *random-gauss-save*
+      (prog1
+          *random-gauss-save*
+        (setf *random-gauss-save* nil))
+      (let ((u1 (random 1d0)) (u2 (random 1d0)))
+        (setf *random-gauss-save* (* (sqrt (* -2 (log u1))) (sin (* 2 pi u2))))
+        (+ mean (* (* (sqrt (* -2 (log u1))) (cos (* 2 pi u2))) stdev)))))
+(export 'random-gauss)
 
 (defun random-hash (&optional (length 8))
   (loop for i below length collect (random 256)))
