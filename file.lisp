@@ -27,20 +27,20 @@
       (write-line (elt line-seq i) file))))
 (export 'write-file-from-lines)
 
-(defmacro iterate-lines ((var stream &optional (trim-eol t)) &body body)
+(defmacro for-line-in-stream ((var stream &key (trim-eol t)) &body body)
   (let ((handle (gensym)))
     `(let ((,handle ,stream))
        (do (,var) ((not (setf ,var (read-line ,handle nil))))
          ,@(if trim-eol `((setf ,var (string-right-trim '(#\Newline #\Return) ,var))))
          ,@body))))
-(export 'iterate-lines)
+(export 'for-linesin-stream)
 
-(defmacro iterate-file ((var filename &optional (trim-eol t)) &body body)
+(defmacro for-line-in-file ((var filename &key (trim-eol t)) &body body)
   (let ((handle (gensym)))
     `(with-open-file (,handle ,filename)
-       (iterate-lines (,var ,handle ,trim-eol)
+       (for-line-in-stream (,var ,handle :trim-eol ,trim-eol)
          ,@body))))
-(export 'iterate-file)
+(export 'for-line-in-file)
 
 (defun update-file-from-string (path content &key (if-does-not-exist :create))
   "Updates a file only if the new content is different."
