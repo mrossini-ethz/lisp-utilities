@@ -7,6 +7,42 @@
     `(let ,(loop for v in variables for s in sequences collect `(,v (length ,s)))
        ,@body))
 
+  (defun s= (sequence length)
+    (= (length sequence) length))
+
+  (defun s> (sequence length)
+    (> (length sequence) length))
+
+  (defun s< (sequence length)
+    (< (length sequence) length))
+
+  (defun s>= (sequence length)
+    (>= (length sequence) length))
+
+  (defun s<= (sequence length)
+    (<= (length sequence) length))
+
+  (defun ss= (sequence-a sequence-b)
+    (= (length sequence-a) (length sequence-b)))
+
+  (defun ss> (sequence-a sequence-b)
+    (> (length sequence-a) (length sequence-b)))
+
+  (defun ss< (sequence-a sequence-b)
+    (< (length sequence-a) (length sequence-b)))
+
+  (defun ss>= (sequence-a sequence-b)
+    (>= (length sequence-a) (length sequence-b)))
+
+  (defun ss<= (sequence-a sequence-b)
+    (<= (length sequence-a) (length sequence-b)))
+
+  (defun s>0 (sequence)
+    (plusp (length sequence)))
+
+  (defun s=0 (sequence)
+    (zerop (length sequence)))
+
   (defun slice (sequence a &optional b)
     (with-lengths (n) (sequence)
       (subseq sequence (if a (if (minusp a) (+ n a) a) 0) (if b (if (minusp b) (+ n b) b) n))))
