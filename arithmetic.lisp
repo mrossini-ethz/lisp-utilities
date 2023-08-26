@@ -1,30 +1,38 @@
 (in-package :utils)
 
-(with-export
-    (defun /+ (&rest numbers)
-      "Calculates 1/result = 1/a + 1/b + 1/c + ... (e.g. parallel resistors)"
-      (/ (loop for n in numbers summing (/ n))))
-  
-  (defun /- (&rest numbers)
-    "Calculates 1/result = 1/a - 1/b - 1/c + ... (e.g. parallel resistors)"
-    (/ (- (/ (first numbers)) (loop for n in (rest numbers) summing (/ n)))))
-  )
+(defun /+/ (&rest numbers)
+  "Calculates 1/result = 1/a + 1/b + 1/c + ... (e.g. parallel resistors)"
+  (/ (loop for n in numbers summing (/ n))))
+(export '/+/)
 
-(defun hypot (&rest kathetes)
+(defun /-/ (&rest numbers)
+  "Calculates 1/result = 1/a - 1/b - 1/c + ... (e.g. parallel resistors)"
+  (/ (- (/ (first numbers)) (loop for n in (rest numbers) summing (/ n)))))
+(export '/-/)
+
+(defun pyt (&rest numbers)
   "Computes sqrt(a^2 + b^2 + c^2 + ...) in a numerially stable way."
-  (let ((m (apply #'max (mapcar #'abs kathetes))))
+  (let ((m (apply #'max (mapcar #'abs numbers))))
     (if (plusp m)
-        (* m (sqrt (loop for n in kathetes sum (expt (/ n m) 2))))
+        (* m (sqrt (loop for n in numbers sum (expt (/ n m) 2))))
         0.0)))
-(export 'hypot)
+(export 'pyt)
 
-(defun kath (hypotenuse &rest kathetes)
+(defun ipyt (number &rest more-numbers)
   "Computes sqrt(z^2 - a^2 + b^2 + ...) in a numerially stable way."
-  (let ((m (apply #'max (abs hypotenuse) (mapcar #'abs kathetes))))
+  (let ((m (apply #'max (abs number) (mapcar #'abs more-numbers))))
     (if (not (zerop m))
-        (* m (sqrt (- (expt (/ hypotenuse m) 2) (loop for n in kathetes sum (expt (/ n m) 2)))))
+        (* m (sqrt (- (expt (/ number m) 2) (loop for n in more-numbers sum (expt (/ n m) 2)))))
         0.0)))
-(export 'kath)
+(export 'ipyt)
+
+(defun square (number)
+  (* number number))
+(export 'square)
+
+(defun cube (number)
+  (* number number number))
+(export 'cube)
 
 (defun rad->deg (x)
   (* x (/ 180 pi)))
