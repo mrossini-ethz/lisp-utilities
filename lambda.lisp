@@ -35,6 +35,7 @@
 (defun string=p (str)
   "Creates a lambda function for use as a predicate that needs more than one argument."
   #'(lambda (x) (string= str x)))
+(export 'string=p)
 
 (defun unary (function arg)
   #'(lambda (x) (funcall function x arg)))
