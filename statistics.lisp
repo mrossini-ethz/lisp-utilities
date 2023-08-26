@@ -19,6 +19,9 @@
     (multiple-value-bind (s0 s1 s2) (apply #'s0s1s2 values)
       (values s0 (/ s1 s0) (stdev-running s0 s1 s2))))
 
+  (defun stdev (&rest values)
+    (apply #'stdev-running (multiple-value-list (apply #'s0s1s2 values))))
+
   (defun median (&rest numbers)
     (let ((n (list-length numbers)) (s (sort numbers #'<)))
     (if (oddp n)
