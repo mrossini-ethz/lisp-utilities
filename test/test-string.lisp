@@ -10,11 +10,50 @@
   (is (string= (utils:strcat "abc" "def" "ghi" "jkl" "mno" "..." "xyz") "abcdefghijklmno...xyz")))
 
 (test strsplit
+  ;; delimiter is default
+  (is (equal (utils:strsplit "") '("")))
+  (is (equal (utils:strsplit "  ") '("" "" "")))
+  (is (equal (utils:strsplit "abc") '("abc")))
+  (is (equal (utils:strsplit "a b c") '("a" "b" "c")))
+  ;; delimiter is char
+  (is (equal (utils:strsplit "" #\,) '("")))
+  (is (equal (utils:strsplit ",," #\,) '("" "" "")))
+  (is (equal (utils:strsplit "a b c" #\,) '("a b c")))
+  (is (equal (utils:strsplit "a,b,c" #\,) '("a" "b" "c")))
+  (is (equal (utils:strsplit "a,b.c" #\,) '("a" "b.c")))
+  (is (equal (utils:strsplit "a, b, c" #\,) '("a" " b" " c")))
+  ;; delimiter is string
+  (is (equal (utils:strsplit "" ",") '("")))
+  (is (equal (utils:strsplit ",," ",") '("" "" "")))
   (is (equal (utils:strsplit "a b c" ",") '("a b c")))
   (is (equal (utils:strsplit "a,b,c" ",") '("a" "b" "c")))
   (is (equal (utils:strsplit "a,b.c" ",") '("a" "b.c")))
   (is (equal (utils:strsplit "a, b, c" ",") '("a" " b" " c")))
-  (is (equal (utils:strsplit "a<->b<->c" "<->") '("a" "b" "c"))))
+  (is (equal (utils:strsplit "a<->b<->c" "<->") '("a" "b" "c")))
+  ;; delimiter is list of characters
+  (is (equal (utils:strsplit "" '(#\, #\. #\;)) '("")))
+  (is (equal (utils:strsplit ",," '(#\, #\. #\;)) '("" "" "")))
+  (is (equal (utils:strsplit ".." '(#\, #\. #\;)) '("" "" "")))
+  (is (equal (utils:strsplit ";;" '(#\, #\. #\;)) '("" "" "")))
+  (is (equal (utils:strsplit ",.;" '(#\, #\. #\;)) '("" "" "" "")))
+  (is (equal (utils:strsplit ".,;" '(#\, #\. #\;)) '("" "" "" "")))
+  (is (equal (utils:strsplit ",;." '(#\, #\. #\;)) '("" "" "" "")))
+  (is (equal (utils:strsplit ".;," '(#\, #\. #\;)) '("" "" "" "")))
+  (is (equal (utils:strsplit ";,." '(#\, #\. #\;)) '("" "" "" "")))
+  (is (equal (utils:strsplit ";.," '(#\, #\. #\;)) '("" "" "" "")))
+  (is (equal (utils:strsplit "a;b;c" '(#\, #\. #\;)) '("a" "b" "c")))
+  (is (equal (utils:strsplit "a,b,c" '(#\, #\. #\;)) '("a" "b" "c")))
+  (is (equal (utils:strsplit "a.b.c" '(#\, #\. #\;)) '("a" "b" "c")))
+  (is (equal (utils:strsplit "a b c" '(#\, #\. #\;)) '("a b c")))
+  ;; delimiter is test function
+  (is (equal (utils:strsplit "" #'digit-char-p) '("")))
+  (is (equal (utils:strsplit "11" #'digit-char-p) '("" "" "")))
+  (is (equal (utils:strsplit "55" #'digit-char-p) '("" "" "")))
+  (is (equal (utils:strsplit "99" #'digit-char-p) '("" "" "")))
+  (is (equal (utils:strsplit "19" #'digit-char-p) '("" "" "")))
+  (is (equal (utils:strsplit "91" #'digit-char-p) '("" "" "")))
+  (is (equal (utils:strsplit "a1b2c3" #'digit-char-p) '("a" "b" "c" "")))
+  (is (equal (utils:strsplit "1a2b3c" #'digit-char-p) '("" "a" "b" "c"))))
 
 (test strjoin
   (is (equal (utils:strjoin "," "") ""))
