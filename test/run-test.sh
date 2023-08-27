@@ -14,7 +14,6 @@ then
 		--lose-on-corruption \
 		--end-runtime-options \
 		--no-sysinit \
-		--no-userinit \
 		--disable-debugger \
 		--eval '(require :asdf)' \
 		--eval '(asdf:test-system :utils)' \
