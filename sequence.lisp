@@ -192,3 +192,18 @@
     ;; Return it
     result))
 (export 'remove-if-index)
+
+(defun range (a &optional b (step 1) (type 'list))
+  (unless b
+    (setf b a)
+    (setf a 0))
+  (when (or (zerop step) (and (< a b) (minusp step)) (and (> a b) (plusp step)))
+    (error "Invalid range step."))
+  (if (plusp step)
+      (let ((result (make-sequence type (ceiling (- b a) step))))
+        (loop for v upfrom a below b by step for i upfrom 0 do (setf (elt result i) v))
+        result)
+      (let ((result (make-sequence type (ceiling (- a b) (- step)))))
+        (loop for v downfrom a above b by (- step) for i upfrom 0 do (setf (elt result i) v))
+        result)))
+(export 'range)
