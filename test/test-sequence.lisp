@@ -2,6 +2,53 @@
 
 (def-suite* sequence :in utils)
 
+(test with-lengths
+  ;; Zero operands
+  (is (= (utils:with-lengths () () 3) 3))
+  ;; One operand
+  (is (= (utils:with-lengths (n) ('()) n) 0))
+  (is (= (utils:with-lengths (n) ('(1)) n) 1))
+  (is (= (utils:with-lengths (n) ('(1 2)) n) 2))
+  (is (= (utils:with-lengths (n) ('(1 2 3)) n) 3))
+  ;; Two operands
+  (is (= (utils:with-lengths (n m) ('() '()) (declare (ignorable m)) n) 0))
+  (is (= (utils:with-lengths (n m) ('() '(1)) (declare (ignorable m)) n) 0))
+  (is (= (utils:with-lengths (n m) ('() '(1 2)) (declare (ignorable m)) n) 0))
+  (is (= (utils:with-lengths (n m) ('() '(1 2 3)) (declare (ignorable m)) n) 0))
+  (is (= (utils:with-lengths (n m) ('(1) '()) (declare (ignorable m)) n) 1))
+  (is (= (utils:with-lengths (n m) ('(1) '(1)) (declare (ignorable m)) n) 1))
+  (is (= (utils:with-lengths (n m) ('(1) '(1 2)) (declare (ignorable m)) n) 1))
+  (is (= (utils:with-lengths (n m) ('(1) '(1 2 3)) (declare (ignorable m)) n) 1))
+  (is (= (utils:with-lengths (n m) ('(1 2) '()) (declare (ignorable m)) n) 2))
+  (is (= (utils:with-lengths (n m) ('(1 2) '(1)) (declare (ignorable m)) n) 2))
+  (is (= (utils:with-lengths (n m) ('(1 2) '(1 2)) (declare (ignorable m)) n) 2))
+  (is (= (utils:with-lengths (n m) ('(1 2) '(1 2 3)) (declare (ignorable m)) n) 2))
+  (is (= (utils:with-lengths (n m) ('(1 2 3) '()) (declare (ignorable m)) n) 3))
+  (is (= (utils:with-lengths (n m) ('(1 2 3) '(1)) (declare (ignorable m)) n) 3))
+  (is (= (utils:with-lengths (n m) ('(1 2 3) '(1 2)) (declare (ignorable m)) n) 3))
+  (is (= (utils:with-lengths (n m) ('(1 2 3) '(1 2 3)) (declare (ignorable m)) n) 3))
+  (is (= (utils:with-lengths (n m) ('() '()) (declare (ignorable n)) m) 0))
+  (is (= (utils:with-lengths (n m) ('(1) '()) (declare (ignorable n)) m) 0))
+  (is (= (utils:with-lengths (n m) ('(1 2) '()) (declare (ignorable n)) m) 0))
+  (is (= (utils:with-lengths (n m) ('(1 2 3) '()) (declare (ignorable n)) m) 0))
+  (is (= (utils:with-lengths (n m) ('() '(1)) (declare (ignorable n)) m) 1))
+  (is (= (utils:with-lengths (n m) ('(1) '(1)) (declare (ignorable n)) m) 1))
+  (is (= (utils:with-lengths (n m) ('(1 2) '(1)) (declare (ignorable n)) m) 1))
+  (is (= (utils:with-lengths (n m) ('(1 2 3) '(1)) (declare (ignorable n)) m) 1))
+  (is (= (utils:with-lengths (n m) ('() '(1 2)) (declare (ignorable n)) m) 2))
+  (is (= (utils:with-lengths (n m) ('(1) '(1 2)) (declare (ignorable n)) m) 2))
+  (is (= (utils:with-lengths (n m) ('(1 2) '(1 2)) (declare (ignorable n)) m) 2))
+  (is (= (utils:with-lengths (n m) ('(1 2 3) '(1 2)) (declare (ignorable n)) m) 2))
+  (is (= (utils:with-lengths (n m) ('() '(1 2 3)) (declare (ignorable n)) m) 3))
+  (is (= (utils:with-lengths (n m) ('(1) '(1 2 3)) (declare (ignorable n)) m) 3))
+  (is (= (utils:with-lengths (n m) ('(1 2) '(1 2 3)) (declare (ignorable n)) m) 3))
+  (is (= (utils:with-lengths (n m) ('(1 2 3) '(1 2 3)) (declare (ignorable n)) m) 3))
+  ;; Invalid number of operands
+  (signals error (eval '(utils:with-lengths () (nil) t)))
+  (signals error (eval '(utils:with-lengths () ('(1 2 3)) t)))
+  (signals error (eval '(utils:with-lengths (n) () t)))
+  (signals error (eval '(utils:with-lengths (n m) ('(1 2 3)) t))))
+
 (test remove-nth
   (is (equal (utils:remove-nth 0 '(1)) nil))
   (is (equal (utils:remove-nth 0 '(1 2)) '(2)))
