@@ -80,27 +80,33 @@
 (export 'multiline-format)
 
 (defun parse-float (float-str)
-  (let ((pre-decimal 0) (post-decimal 0) (exponent 0))
+  (when (or (zerop (length float-str)) (string= float-str "."))
+    (error "Error parsing floating point number."))
+  (let ((sign 1) (pre-decimal 0) (post-decimal 0) (exponent 0))
+    ;; Get the sign (if it exists)
+    (cond
+      ((char= (elt float-str 0) #\+) (setf float-str (subseq float-str 1)))
+      ((char= (elt float-str 0) #\-) (setf float-str (subseq float-str 1) sign -1)))
     ;; Get the exponent (if it exists)
     (let ((pos (position #\e float-str :test #'char-equal)))
       (when pos
+        (when (zerop pos)
+          (error "Error parsing floating point number."))
         (handler-case
             (setf exponent (parse-integer (subseq float-str (1+ pos))))
-          (t () (error "Error parsing exponent")))
+          (t () (error "Error parsing floating point number.")))
         (setf float-str (subseq float-str 0 pos))))
     ;; Get the decimals (if they exist)
     (let ((pos (position #\. float-str :test #'char=)))
       (when pos
         (let ((substr (subseq float-str (1+ pos))))
           (unless (every #'digit-char-p substr)
-            (error "Error parsing decimals"))
+            (error "Error parsing floating point number."))
           (when (plusp (length substr))
-            (handler-case
-                (setf post-decimal (* (parse-integer (subseq float-str (1+ pos))) (expt 10d0 (- pos -1 (length float-str)))))
-              (t () (error "Error parsing decimal number"))))
+            (setf post-decimal (* (parse-integer (subseq float-str (1+ pos))) (expt 10d0 (- pos -1 (length float-str))))))
           (setf float-str (subseq float-str 0 pos)))))
     ;; Get the integer before the decimal point
     (when (plusp (length float-str))
       (setf pre-decimal (parse-integer float-str)))
-    (* (+ pre-decimal post-decimal) (expt 10d0 exponent))))
+    (* sign (+ pre-decimal post-decimal) (expt 10d0 exponent))))
 (export 'parse-float)
