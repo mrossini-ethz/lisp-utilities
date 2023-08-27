@@ -1204,3 +1204,16 @@
   (is-false (eq (utils:copy-sequence '(1 2 3)) '(1 2 3)))
   (is-false (eq (utils:copy-sequence #(1 2 3)) #(1 2 3)))
   (is-false (eq (utils:copy-sequence "123") "123")))
+
+(test remove-if-index
+  ;; Remove some
+  (is (equal (utils:remove-if-index #'oddp '(0 1 2 3 4 5 6 7)) '(0 2 4 6)))
+  (is (equal (utils:remove-if-index #'oddp '(1 2 3 4 5 6 7 8)) '(1 3 5 7)))
+  (is (equalp (utils:remove-if-index #'oddp #(0 1 2 3 4 5 6 7)) #(0 2 4 6)))
+  (is (equalp (utils:remove-if-index #'oddp #(1 2 3 4 5 6 7 8)) #(1 3 5 7)))
+  (is (string= (utils:remove-if-index #'oddp "a1b2c3d4e5") "abcde"))
+  (is (string= (utils:remove-if-index #'evenp "a1b2c3d4e5") "12345"))
+  ;; Remove all
+  (is (equal (utils:remove-if-index (constantly t) '(0 1 2 3 4 5 6 7)) '()))
+  ;; Remove none
+  (is (equal (utils:remove-if-index (constantly nil) '(0 1 2 3 4 5 6 7)) '(0 1 2 3 4 5 6 7))))

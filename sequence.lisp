@@ -188,7 +188,7 @@
     ;; Determine number of items for resulting sequence
     (loop for i below n when (funcall test i) do (incf m))
     ;; Create sequence of same type with the right number of items
-    (setf result (make-sequence (type-of sequence) (- n m)))
+    (setf result (subseq sequence 0 (- n m)))
     ;; Copy the elements
     (loop for i below n for x = (funcall test i) with j = 0 when (not x) do
       (setf (elt result j) (elt sequence i))
