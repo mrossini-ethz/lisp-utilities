@@ -972,6 +972,141 @@
   (signals error (utils:ss<= '(1 2 3) 3))
   (signals error (utils:ss<= 3 0)))
 
+(test slice-0
+  (let ((n 0) (test-list '()))
+    ;; Both indices specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (loop for j upfrom (- (1+ n)) upto (1+ n) for jj = (if (minusp j) (+ n j) j) do
+        (cond
+          ((> ii jj) (signals error (utils:slice test-list i j)))
+          ((minusp ii) (signals error (utils:slice test-list i j)))
+          ((minusp jj) (signals error (utils:slice test-list i j)))
+          ((> ii n) (signals error (utils:slice test-list i j)))
+          ((> jj n) (signals error (utils:slice test-list i j)))
+          (t (is (equal (utils:slice test-list i j) (subseq test-list ii jj)))))))
+    ;; Only first index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list i) (subseq test-list ii n))))))
+    ;; Only second index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list nil i) (subseq test-list 0 ii))))))
+    ;; No index specified
+    (is (equal (utils:slice test-list nil) test-list))))
+
+(test slice-1
+  (let ((n 1) (test-list '(1)))
+    ;; Both indices specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (loop for j upfrom (- (1+ n)) upto (1+ n) for jj = (if (minusp j) (+ n j) j) do
+        (cond
+          ((> ii jj) (signals error (utils:slice test-list i j)))
+          ((minusp ii) (signals error (utils:slice test-list i j)))
+          ((minusp jj) (signals error (utils:slice test-list i j)))
+          ((> ii n) (signals error (utils:slice test-list i j)))
+          ((> jj n) (signals error (utils:slice test-list i j)))
+          (t (is (equal (utils:slice test-list i j) (subseq test-list ii jj)))))))
+    ;; Only first index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list i) (subseq test-list ii n))))))
+    ;; Only second index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list nil i) (subseq test-list 0 ii))))))
+    ;; No index specified
+    (is (equal (utils:slice test-list nil) test-list))))
+
+(test slice-2
+  (let ((n 2) (test-list '(1 2)))
+    ;; Both indices specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (loop for j upfrom (- (1+ n)) upto (1+ n) for jj = (if (minusp j) (+ n j) j) do
+        (cond
+          ((> ii jj) (signals error (utils:slice test-list i j)))
+          ((minusp ii) (signals error (utils:slice test-list i j)))
+          ((minusp jj) (signals error (utils:slice test-list i j)))
+          ((> ii n) (signals error (utils:slice test-list i j)))
+          ((> jj n) (signals error (utils:slice test-list i j)))
+          (t (is (equal (utils:slice test-list i j) (subseq test-list ii jj)))))))
+    ;; Only first index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list i) (subseq test-list ii n))))))
+    ;; Only second index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list nil i) (subseq test-list 0 ii))))))
+    ;; No index specified
+    (is (equal (utils:slice test-list nil) test-list))))
+
+(test slice-3
+  (let ((n 3) (test-list '(1 2 3)))
+    ;; Both indices specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (loop for j upfrom (- (1+ n)) upto (1+ n) for jj = (if (minusp j) (+ n j) j) do
+        (cond
+          ((> ii jj) (signals error (utils:slice test-list i j)))
+          ((minusp ii) (signals error (utils:slice test-list i j)))
+          ((minusp jj) (signals error (utils:slice test-list i j)))
+          ((> ii n) (signals error (utils:slice test-list i j)))
+          ((> jj n) (signals error (utils:slice test-list i j)))
+          (t (is (equal (utils:slice test-list i j) (subseq test-list ii jj)))))))
+    ;; Only first index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list i) (subseq test-list ii n))))))
+    ;; Only second index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list nil i) (subseq test-list 0 ii))))))
+    ;; No index specified
+    (is (equal (utils:slice test-list nil) test-list))))
+
+(test slice-4
+  (let ((n 4) (test-list '(1 2 3 4)))
+    ;; Both indices specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (loop for j upfrom (- (1+ n)) upto (1+ n) for jj = (if (minusp j) (+ n j) j) do
+        (cond
+          ((> ii jj) (signals error (utils:slice test-list i j)))
+          ((minusp ii) (signals error (utils:slice test-list i j)))
+          ((minusp jj) (signals error (utils:slice test-list i j)))
+          ((> ii n) (signals error (utils:slice test-list i j)))
+          ((> jj n) (signals error (utils:slice test-list i j)))
+          (t (is (equal (utils:slice test-list i j) (subseq test-list ii jj)))))))
+    ;; Only first index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list i) (subseq test-list ii n))))))
+    ;; Only second index specified
+    (loop for i upfrom (- (1+ n)) upto (1+ n) for ii = (if (minusp i) (+ n i) i) do
+      (cond
+        ((minusp ii) (signals error (utils:slice test-list i)))
+        ((> ii n) (signals error (utils:slice test-list i)))
+        (t (is (equal (utils:slice test-list nil i) (subseq test-list 0 ii))))))
+    ;; No index specified
+    (is (equal (utils:slice test-list nil) test-list))))
+
 (test remove-nth
   (is (equal (utils:remove-nth 0 '(1)) nil))
   (is (equal (utils:remove-nth 0 '(1 2)) '(2)))
