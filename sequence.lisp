@@ -32,22 +32,27 @@
   (<= (length sequence) length))
 (export 's<=)
 
+(declaim (inline ss=))
 (defun ss= (sequence-a sequence-b)
   (= (length sequence-a) (length sequence-b)))
 (export 'ss=)
 
+(declaim (inline ss>))
 (defun ss> (sequence-a sequence-b)
   (> (length sequence-a) (length sequence-b)))
 (export 'ss>)
 
+(declaim (inline ss<))
 (defun ss< (sequence-a sequence-b)
   (< (length sequence-a) (length sequence-b)))
 (export 'ss<)
 
+(declaim (inline ss>=))
 (defun ss>= (sequence-a sequence-b)
   (>= (length sequence-a) (length sequence-b)))
 (export 'ss>=)
 
+(declaim (inline ss<=))
 (defun ss<= (sequence-a sequence-b)
   (<= (length sequence-a) (length sequence-b)))
 (export 'ss<=)
