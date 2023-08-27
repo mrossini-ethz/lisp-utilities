@@ -50,6 +50,7 @@
   (signals error (eval '(utils:with-lengths (n m) ('(1 2 3)) t))))
 
 (test s=
+  (declare (notinline utils:s=))
   ;; Zero length
   (is-false (utils:s= '() -1))
   (is-false (utils:s= #() -1))
@@ -106,6 +107,7 @@
   (signals error (utils:s= 3 0)))
 
 (test s>
+  (declare (notinline utils:s>))
   ;; Zero length
   (is (utils:s> '() -1))
   (is (utils:s> #() -1))
@@ -162,6 +164,7 @@
   (signals error (utils:s> 3 0)))
 
 (test s<
+  (declare (notinline utils:s<))
   ;; Zero length
   (is-false (utils:s< '() -1))
   (is-false (utils:s< #() -1))
@@ -218,6 +221,7 @@
   (signals error (utils:s< 3 0)))
 
 (test s>=
+  (declare (notinline utils:s>=))
   ;; Zero length
   (is (utils:s>= '() -1))
   (is (utils:s>= #() -1))
@@ -274,6 +278,7 @@
   (signals error (utils:s>= 3 0)))
 
 (test s<=
+  (declare (notinline utils:s<=))
   ;; Zero length
   (is-false (utils:s<= '() -1))
   (is-false (utils:s<= #() -1))

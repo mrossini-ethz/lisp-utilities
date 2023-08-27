@@ -7,22 +7,27 @@
      ,@body))
 (export 'with-lengths)
 
+(declaim (inline s=))
 (defun s= (sequence length)
   (= (length sequence) length))
 (export 's=)
 
+(declaim (inline s>))
 (defun s> (sequence length)
   (> (length sequence) length))
 (export 's>)
 
+(declaim (inline s<))
 (defun s< (sequence length)
   (< (length sequence) length))
 (export 's<)
 
+(declaim (inline s>=))
 (defun s>= (sequence length)
   (>= (length sequence) length))
 (export 's>=)
 
+(declaim (inline s<=))
 (defun s<= (sequence length)
   (<= (length sequence) length))
 (export 's<=)
