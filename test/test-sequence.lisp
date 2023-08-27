@@ -334,6 +334,364 @@
   ;; Invalid argument
   (signals error (utils:s<= 3 0)))
 
+(test s=0
+  (declare (notinline utils:s=0))
+  ;; Length 0
+  (is (utils:s=0 '()))
+  (is (utils:s=0 #()))
+  (is (utils:s=0 ""))
+  ;; Length 1
+  (is-false (utils:s=0 '(1)))
+  (is-false (utils:s=0 #(1)))
+  (is-false (utils:s=0 "1"))
+  ;; Length 2
+  (is-false (utils:s=0 '(1 2)))
+  (is-false (utils:s=0 #(1 2)))
+  (is-false (utils:s=0 "12"))
+  ;; Length 3
+  (is-false (utils:s=0 '(1 2 3)))
+  (is-false (utils:s=0 #(1 2 3)))
+  (is-false (utils:s=0 "123"))
+  ;; Is a function
+  (is (identity (function utils:s=0)))
+  ;; Invalid argument
+  (signals error (utils:s=0 3)))
+
+(test s=1
+  (declare (notinline utils:s=1))
+  ;; Length 0
+  (is-false (utils:s=1 '()))
+  (is-false (utils:s=1 #()))
+  (is-false (utils:s=1 ""))
+  ;; Length 1
+  (is (utils:s=1 '(1)))
+  (is (utils:s=1 #(1)))
+  (is (utils:s=1 "1"))
+  ;; Length 2
+  (is-false (utils:s=1 '(1 2)))
+  (is-false (utils:s=1 #(1 2)))
+  (is-false (utils:s=1 "12"))
+  ;; Length 3
+  (is-false (utils:s=1 '(1 2 3)))
+  (is-false (utils:s=1 #(1 2 3)))
+  (is-false (utils:s=1 "123"))
+  ;; Is a function
+  (is (identity (function utils:s=1)))
+  ;; Invalid argument
+  (signals error (utils:s=1 3)))
+
+(test s=2
+  (declare (notinline utils:s=2))
+  ;; Length 0
+  (is-false (utils:s=2 '()))
+  (is-false (utils:s=2 #()))
+  (is-false (utils:s=2 ""))
+  ;; Length 1
+  (is-false (utils:s=2 '(1)))
+  (is-false (utils:s=2 #(1)))
+  (is-false (utils:s=2 "1"))
+  ;; Length 2
+  (is (utils:s=2 '(1 2)))
+  (is (utils:s=2 #(1 2)))
+  (is (utils:s=2 "12"))
+  ;; Length 3
+  (is-false (utils:s=2 '(1 2 3)))
+  (is-false (utils:s=2 #(1 2 3)))
+  (is-false (utils:s=2 "123"))
+  ;; Is a function
+  (is (identity (function utils:s=2)))
+  ;; Invalid argument
+  (signals error (utils:s=2 3)))
+
+(test s=3
+  (declare (notinline utils:s=3))
+  ;; Length 0
+  (is-false (utils:s=3 '()))
+  (is-false (utils:s=3 #()))
+  (is-false (utils:s=3 ""))
+  ;; Length 1
+  (is-false (utils:s=3 '(1)))
+  (is-false (utils:s=3 #(1)))
+  (is-false (utils:s=3 "1"))
+  ;; Length 2
+  (is-false (utils:s=3 '(1 2)))
+  (is-false (utils:s=3 #(1 2)))
+  (is-false (utils:s=3 "12"))
+  ;; Length 3
+  (is (utils:s=3 '(1 2 3)))
+  (is (utils:s=3 #(1 2 3)))
+  (is (utils:s=3 "123"))
+  ;; Length 4
+  (is-false (utils:s=3 '(1 2 3 4)))
+  (is-false (utils:s=3 #(1 2 3 4)))
+  (is-false (utils:s=3 "12345"))
+  ;; Is a function
+  (is (identity (function utils:s=3)))
+  ;; Invalid argument
+  (signals error (utils:s=3 3)))
+
+(test s=4
+  (declare (notinline utils:s=4))
+  ;; Length 0
+  (is-false (utils:s=4 '()))
+  (is-false (utils:s=4 #()))
+  (is-false (utils:s=4 ""))
+  ;; Length 1
+  (is-false (utils:s=4 '(1)))
+  (is-false (utils:s=4 #(1)))
+  (is-false (utils:s=4 "1"))
+  ;; Length 2
+  (is-false (utils:s=4 '(1 2)))
+  (is-false (utils:s=4 #(1 2)))
+  (is-false (utils:s=4 "12"))
+  ;; Length 3
+  (is-false (utils:s=4 '(1 2 3)))
+  (is-false (utils:s=4 #(1 2 3)))
+  (is-false (utils:s=4 "123"))
+  ;; Length 4
+  (is (utils:s=4 '(1 2 3 4)))
+  (is (utils:s=4 #(1 2 3 4)))
+  (is (utils:s=4 "1234"))
+  ;; Length 5
+  (is-false (utils:s=4 '(1 2 3 4 5)))
+  (is-false (utils:s=4 #(1 2 3 4 5)))
+  (is-false (utils:s=4 "12345"))
+  ;; Is a function
+  (is (identity (function utils:s=4)))
+  ;; Invalid argument
+  (signals error (utils:s=4 3)))
+
+(test s>0
+  (declare (notinline utils:s>0))
+  ;; Length 0
+  (is-false (utils:s>0 '()))
+  (is-false (utils:s>0 #()))
+  (is-false (utils:s>0 ""))
+  ;; Length 1
+  (is (utils:s>0 '(1)))
+  (is (utils:s>0 #(1)))
+  (is (utils:s>0 "1"))
+  ;; Length 2
+  (is (utils:s>0 '(1 2)))
+  (is (utils:s>0 #(1 2)))
+  (is (utils:s>0 "12"))
+  ;; Length 3
+  (is (utils:s>0 '(1 2 3)))
+  (is (utils:s>0 #(1 2 3)))
+  (is (utils:s>0 "123"))
+  ;; Is a function
+  (is (identity (function utils:s>0)))
+  ;; Invalid argument
+  (signals error (utils:s>0 3)))
+
+(test s>1
+  (declare (notinline utils:s>1))
+  ;; Length 0
+  (is-false (utils:s>1 '()))
+  (is-false (utils:s>1 #()))
+  (is-false (utils:s>1 ""))
+  ;; Length 1
+  (is-false (utils:s>1 '(1)))
+  (is-false (utils:s>1 #(1)))
+  (is-false (utils:s>1 "1"))
+  ;; Length 2
+  (is (utils:s>1 '(1 2)))
+  (is (utils:s>1 #(1 2)))
+  (is (utils:s>1 "12"))
+  ;; Length 3
+  (is (utils:s>1 '(1 2 3)))
+  (is (utils:s>1 #(1 2 3)))
+  (is (utils:s>1 "123"))
+  ;; Is a function
+  (is (identity (function utils:s>1)))
+  ;; Invalid argument
+  (signals error (utils:s>1 3)))
+
+(test s>2
+  (declare (notinline utils:s>2))
+  ;; Length 0
+  (is-false (utils:s>2 '()))
+  (is-false (utils:s>2 #()))
+  (is-false (utils:s>2 ""))
+  ;; Length 1
+  (is-false (utils:s>2 '(1)))
+  (is-false (utils:s>2 #(1)))
+  (is-false (utils:s>2 "1"))
+  ;; Length 2
+  (is-false (utils:s>2 '(1 2)))
+  (is-false (utils:s>2 #(1 2)))
+  (is-false (utils:s>2 "12"))
+  ;; Length 3
+  (is (utils:s>2 '(1 2 3)))
+  (is (utils:s>2 #(1 2 3)))
+  (is (utils:s>2 "123"))
+  ;; Is a function
+  (is (identity (function utils:s>2)))
+  ;; Invalid argument
+  (signals error (utils:s>2 3)))
+
+(test s>3
+  (declare (notinline utils:s>3))
+  ;; Length 0
+  (is-false (utils:s>3 '()))
+  (is-false (utils:s>3 #()))
+  (is-false (utils:s>3 ""))
+  ;; Length 1
+  (is-false (utils:s>3 '(1)))
+  (is-false (utils:s>3 #(1)))
+  (is-false (utils:s>3 "1"))
+  ;; Length 2
+  (is-false (utils:s>3 '(1 2)))
+  (is-false (utils:s>3 #(1 2)))
+  (is-false (utils:s>3 "12"))
+  ;; Length 3
+  (is-false (utils:s>3 '(1 2 3)))
+  (is-false (utils:s>3 #(1 2 3)))
+  (is-false (utils:s>3 "123"))
+  ;; Length 4
+  (is (utils:s>3 '(1 2 3 4)))
+  (is (utils:s>3 #(1 2 3 4)))
+  (is (utils:s>3 "1234"))
+  ;; Is a function
+  (is (identity (function utils:s>3)))
+  ;; Invalid argument
+  (signals error (utils:s>3 3)))
+
+(test s>4
+  (declare (notinline utils:s>4))
+  ;; Length 0
+  (is-false (utils:s>4 '()))
+  (is-false (utils:s>4 #()))
+  (is-false (utils:s>4 ""))
+  ;; Length 1
+  (is-false (utils:s>4 '(1)))
+  (is-false (utils:s>4 #(1)))
+  (is-false (utils:s>4 "1"))
+  ;; Length 2
+  (is-false (utils:s>4 '(1 2)))
+  (is-false (utils:s>4 #(1 2)))
+  (is-false (utils:s>4 "12"))
+  ;; Length 3
+  (is-false (utils:s>4 '(1 2 3)))
+  (is-false (utils:s>4 #(1 2 3)))
+  (is-false (utils:s>4 "123"))
+  ;; Length 4
+  (is-false (utils:s>4 '(1 2 3 4)))
+  (is-false (utils:s>4 #(1 2 3 4)))
+  (is-false (utils:s>4 "1234"))
+  ;; Length 5
+  (is (utils:s>4 '(1 2 3 4 5)))
+  (is (utils:s>4 #(1 2 3 4 5)))
+  (is (utils:s>4 "12345"))
+  ;; Is a function
+  (is (identity (function utils:s>4)))
+  ;; Invalid argument
+  (signals error (utils:s>4 3)))
+
+(test s<1
+  (declare (notinline utils:s<1))
+  ;; Length 0
+  (is (utils:s<1 '()))
+  (is (utils:s<1 #()))
+  (is (utils:s<1 ""))
+  ;; Length 1
+  (is-false (utils:s<1 '(1)))
+  (is-false (utils:s<1 #(1)))
+  (is-false (utils:s<1 "1"))
+  ;; Length 2
+  (is-false (utils:s<1 '(1 2)))
+  (is-false (utils:s<1 #(1 2)))
+  (is-false (utils:s<1 "12"))
+  ;; Length 3
+  (is-false (utils:s<1 '(1 2 3)))
+  (is-false (utils:s<1 #(1 2 3)))
+  (is-false (utils:s<1 "123"))
+  ;; Is a function
+  (is (identity (function utils:s<1)))
+  ;; Invalid argument
+  (signals error (utils:s<1 3)))
+
+(test s<2
+  (declare (notinline utils:s<2))
+  ;; Length 0
+  (is (utils:s<2 '()))
+  (is (utils:s<2 #()))
+  (is (utils:s<2 ""))
+  ;; Length 1
+  (is (utils:s<2 '(1)))
+  (is (utils:s<2 #(1)))
+  (is (utils:s<2 "1"))
+  ;; Length 2
+  (is-false (utils:s<2 '(1 2)))
+  (is-false (utils:s<2 #(1 2)))
+  (is-false (utils:s<2 "12"))
+  ;; Length 3
+  (is-false (utils:s<2 '(1 2 3)))
+  (is-false (utils:s<2 #(1 2 3)))
+  (is-false (utils:s<2 "123"))
+  ;; Is a function
+  (is (identity (function utils:s<2)))
+  ;; Invalid argument
+  (signals error (utils:s<2 3)))
+
+(test s<3
+  (declare (notinline utils:s<3))
+  ;; Length 0
+  (is (utils:s<3 '()))
+  (is (utils:s<3 #()))
+  (is (utils:s<3 ""))
+  ;; Length 1
+  (is (utils:s<3 '(1)))
+  (is (utils:s<3 #(1)))
+  (is (utils:s<3 "1"))
+  ;; Length 2
+  (is (utils:s<3 '(1 2)))
+  (is (utils:s<3 #(1 2)))
+  (is (utils:s<3 "12"))
+  ;; Length 3
+  (is-false (utils:s<3 '(1 2 3)))
+  (is-false (utils:s<3 #(1 2 3)))
+  (is-false (utils:s<3 "123"))
+  ;; Length 4
+  (is-false (utils:s<3 '(1 2 3 4)))
+  (is-false (utils:s<3 #(1 2 3 4)))
+  (is-false (utils:s<3 "1234"))
+  ;; Is a function
+  (is (identity (function utils:s<3)))
+  ;; Invalid argument
+  (signals error (utils:s<3 3)))
+
+(test s<4
+  (declare (notinline utils:s<4))
+  ;; Length 0
+  (is (utils:s<4 '()))
+  (is (utils:s<4 #()))
+  (is (utils:s<4 ""))
+  ;; Length 1
+  (is (utils:s<4 '(1)))
+  (is (utils:s<4 #(1)))
+  (is (utils:s<4 "1"))
+  ;; Length 2
+  (is (utils:s<4 '(1 2)))
+  (is (utils:s<4 #(1 2)))
+  (is (utils:s<4 "12"))
+  ;; Length 3
+  (is (utils:s<4 '(1 2 3)))
+  (is (utils:s<4 #(1 2 3)))
+  (is (utils:s<4 "123"))
+  ;; Length 4
+  (is-false (utils:s<4 '(1 2 3 4)))
+  (is-false (utils:s<4 #(1 2 3 4)))
+  (is-false (utils:s<4 "1234"))
+  ;; Length 5
+  (is-false (utils:s<4 '(1 2 3 4 5)))
+  (is-false (utils:s<4 #(1 2 3 4 5)))
+  (is-false (utils:s<4 "12345"))
+  ;; Is a function
+  (is (identity (function utils:s<4)))
+  ;; Invalid argument
+  (signals error (utils:s<4 3)))
+
 (test ss=
   (declare (notinline utils:ss=))
   ;; Zero length
