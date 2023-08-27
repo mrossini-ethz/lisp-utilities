@@ -1136,6 +1136,15 @@
   (signals error (utils:sbind (x y z) #(1 2) x))
   (signals error (utils:sbind (x y z) "12" x)))
 
+(test items-unique-p
+  (is (utils:items-unique-p '(1 2 3 4 5)))
+  (is (utils:items-unique-p '(1 2 3 4 5) :test #'=))
+  (is (utils:items-unique-p '(1 2 3 4 5) :key #'identity))
+  (is-false (utils:items-unique-p '(1 1 3 4 5)))
+  (is-false (utils:items-unique-p '(1 2 1 4 5)))
+  (is-false (utils:items-unique-p '(1 2 3 1 5)))
+  (is-false (utils:items-unique-p '(1 2 3 4 1))))
+
 (test remove-nth
   (is (equal (utils:remove-nth 0 '(1)) nil))
   (is (equal (utils:remove-nth 0 '(1 2)) '(2)))
