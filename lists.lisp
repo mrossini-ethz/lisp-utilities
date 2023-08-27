@@ -29,8 +29,6 @@
 (export 'mklist)
 
 ;; Family of functions that test the length of a list without iterating through all members
-(eval-when (:compile-toplevel)
-  (proclaim '(inline l/= l<= l>= single ll/= ll< ll<= ll>=)))
 (defun l= (list length)
   "Tests efficiently whether the length of the list is equal to the given length."
   (cond
@@ -39,6 +37,7 @@
     (t (l= (rest list) (- length 1)))))
 (export 'l=)
 
+(declaim (inline l/=))
 (defun l/= (list length)
   "Tests efficiently whether the length of the list is different from the given length."
   (not (l= list length)))
@@ -53,6 +52,7 @@
     (t (l> (rest list) (- length 1)))))
 (export 'l>)
 
+(declaim (inline l<=))
 (defun l<= (list length)
   "Tests efficiently whether the length of the list is smaller or equal to the given length."
   (not (l> list length)))
@@ -66,11 +66,13 @@
     (t (l< (rest list) (- length 1)))))
 (export 'l<)
 
+(declaim (inline l>=))
 (defun l>= (list length)
   "Tests efficiently whether the length of the list is greater or equal to the given length."
   (not (l< list length)))
 (export 'l>=)
 
+(declaim (inline single))
 (defun single (list)
   (l= list 1))
 (export 'single)
@@ -83,6 +85,7 @@
       (ll= (rest list-a) (rest list-b))))
 (export 'll=)
 
+(declaim (inline ll/=))
 (defun ll/= (list-a list-b)
   "Tests efficiently whether the length of list-a is different from the length of list-b."
   (not (ll= list-a list-b)))
@@ -96,16 +99,19 @@
     (t (ll> (rest list-a) (rest list-b)))))
 (export 'll>)
 
+(declaim (inline ll<=))
 (defun ll<= (list-a list-b)
   "Tests efficiently whether the length of list-a is smaller or equal to the length of list-b."
   (not (ll> list-a list-b)))
 (export 'll<=)
 
+(declaim (inline ll<))
 (defun ll< (list-a list-b)
   "Tests efficiently whether the length of list-a is smaller than the length of list-b."
   (ll> list-b list-a))
 (export 'll<)
 
+(declaim (inline ll>=))
 (defun ll>= (list-a list-b)
   "Tests efficiently whether the length of list-a is greater or equal to the length of list-b."
   (not (ll< list-a list-b)))

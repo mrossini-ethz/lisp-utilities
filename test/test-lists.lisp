@@ -50,6 +50,7 @@
   (signals type-error (utils:l= #(1 2 3 4) 4)))
 
 (test l/=
+  (declare (notinline utils:l/=))
   (is-false (utils:l/= '() 0))
   (is-false (utils:l/= '(1) 1))
   (is-false (utils:l/= '(1 2) 2))
@@ -86,6 +87,7 @@
   (signals type-error (utils:l> #(1 2 3 4) 3)))
 
 (test l<=
+  (declare (notinline utils:l<=))
   (is (utils:l<= '() 0))
   (is (utils:l<= '(1) 1))
   (is (utils:l<= '(1 2) 2))
@@ -122,6 +124,7 @@
   (signals type-error (utils:l< #(1 2 3 4) 5)))
 
 (test l>=
+  (declare (notinline utils:l>=))
   (is (utils:l>= '() 0))
   (is (utils:l>= '(1) 1))
   (is (utils:l>= '(1 2) 2))
@@ -140,6 +143,7 @@
   (signals type-error (utils:l>= #(1 2 3 4) 4)))
 
 (test single
+  (declare (notinline utils:single))
   (is (utils:single '(3)))
   (is-false (utils:single '()))
   (is-false (utils:single '(3 4))))
@@ -165,6 +169,7 @@
   (is-false (utils:ll= '(1 2 3 4 5 6) '(2 3 4 5 6))))
 
 (test ll/=
+  (declare (notinline utils:ll/=))
   (is (utils:ll/= nil '(1)))
   (is (utils:ll/= '(1) '(2 3)))
   (is (utils:ll/= '(1 2) '(2 3 4)))
@@ -205,6 +210,7 @@
   (is (utils:ll> '(1 2 3 4 5 6) '(2 3 4 5 6))))
 
 (test ll<=
+  (declare (notinline utils:ll<=))
   (is (utils:ll<= nil '(1)))
   (is (utils:ll<= '(1) '(2 3)))
   (is (utils:ll<= '(1 2) '(2 3 4)))
@@ -225,6 +231,7 @@
   (is-false (utils:ll<= '(1 2 3 4 5 6) '(2 3 4 5 6))))
 
 (test ll<
+  (declare (notinline utils:ll<))
   (is (utils:ll< nil '(1)))
   (is (utils:ll< '(1) '(2 3)))
   (is (utils:ll< '(1 2) '(2 3 4)))
@@ -245,6 +252,7 @@
   (is-false (utils:ll< '(1 2 3 4 5 6) '(2 3 4 5 6))))
 
 (test ll>=
+  (declare (notinline utils:ll>=))
   (is-false (utils:ll>= nil '(1)))
   (is-false (utils:ll>= '(1) '(2 3)))
   (is-false (utils:ll>= '(1 2) '(2 3 4)))
