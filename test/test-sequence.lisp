@@ -1157,6 +1157,22 @@
   (is (utils:same #'= '((1 1) (2 1) (3 1) (4 1) (5 1)) :key #'second))
   (is-false (utils:same #'= '((1 1) (2 1) (3 1) (4 1) (5 1)) :key #'first)))
 
+(test have
+  (is (utils:have 1 '(1 2 3 4 5) :test #'=))
+  (is (utils:have 2 '(1 2 3 4 5) :test #'=))
+  (is (utils:have 3 '(1 2 3 4 5) :test #'=))
+  (is (utils:have 4 '(1 2 3 4 5) :test #'=))
+  (is (utils:have 5 '(1 2 3 4 5) :test #'=))
+  (is-false (utils:have 6 '(1 2 3 4 5) :test #'=))
+  (is (utils:have 'hello '(hello world)))
+  (is (utils:have 'world '(hello world)))
+  (is (utils:have "hello" '("hello" "world") :test #'string=))
+  (is (utils:have "world" '("hello" "world") :test #'string=))
+  (is (utils:have "HELLO" '("hello" "world") :test #'string-equal))
+  (is (utils:have "WORLD" '("hello" "world") :test #'string-equal))
+  (is (utils:have "hel" '("hello" "world") :test #'string= :key (lambda (x) (subseq x 0 3))))
+  (is (utils:have "wor" '("hello" "world") :test #'string= :key (lambda (x) (subseq x 0 3)))))
+
 (test remove-nth
   (is (equal (utils:remove-nth 0 '(1)) nil))
   (is (equal (utils:remove-nth 0 '(1 2)) '(2)))
