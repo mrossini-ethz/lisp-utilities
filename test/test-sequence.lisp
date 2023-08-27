@@ -1191,3 +1191,16 @@
   (is (equalp (utils:remove-nth 1 #(1 2)) #(1)))
   ;; Invalid type
   (signals error (utils:remove-nth 0 3)))
+
+(test copy-sequence
+  (is (equalp (utils:copy-sequence '()) '()))
+  (is (equalp (utils:copy-sequence #()) #()))
+  (is (equalp (utils:copy-sequence "") ""))
+  (is-false (eq (utils:copy-sequence #()) #()))
+  (is-false (eq (utils:copy-sequence "") ""))
+  (is (equalp (utils:copy-sequence '(1 2 3)) '(1 2 3)))
+  (is (equalp (utils:copy-sequence #(1 2 3)) #(1 2 3)))
+  (is (equalp (utils:copy-sequence "123") "123"))
+  (is-false (eq (utils:copy-sequence '(1 2 3)) '(1 2 3)))
+  (is-false (eq (utils:copy-sequence #(1 2 3)) #(1 2 3)))
+  (is-false (eq (utils:copy-sequence "123") "123")))
