@@ -1,6 +1,5 @@
 (in-package :utils)
 
-
 ;; Graham
 (defmacro aif (test then &optional else)
   `(let ((it ,test))

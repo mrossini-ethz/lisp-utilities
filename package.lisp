@@ -11,5 +11,5 @@
                                       (listp form)
                                       (not (null form))
                                       (or (eq (first form) 'defun)
-                                          (eq (first form) 'defmacro))) `(,form (export ',(second form))) `(,form))))))
-     
+                                          (eq (first form) 'defmacro)))
+                                     `(,form (export ',(second form))) `(,form))))))

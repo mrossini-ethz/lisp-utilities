@@ -11,7 +11,7 @@
                                 `(eql ,(nth n keyforms) ,(nth n (first cas))))))
                 (progn ,@(rest cas)))))))
 (export 'case-table)
-  
+
 (defmacro truth-table ((&rest boolean-forms) &rest action-forms)
   "Conditional expression that evaluates all boolean forms. For each of the possible outcomes (2^n) there has to be an action-form that will then be evaluated. Action-forms are sorted like binary numbers according to the boolean-form states: 000 001 010 011 100 101 110 111 (1 = t, 0 = nil)."
   (when (/= (expt 2 (list-length boolean-forms)) (list-length action-forms))
@@ -22,8 +22,9 @@
     `(let ,(loop for i from 0 for form in boolean-forms for symb in symbols collecting `(,symb ,form))
        (cond
          ,@(loop for i from 0 below (list-length action-forms) collecting
-                `((and ,@(loop for j from (- (list-length boolean-forms) 1) downto 0 for symb in symbols
-                            collecting (if (plusp (logand (expt 2 j) i)) symb `(not ,symb)))) ,(nth i action-forms)))))))
+                 `((and ,@(loop for j from (- (list-length boolean-forms) 1) downto 0 for symb in symbols
+                                collecting (if (plusp (logand (expt 2 j) i)) symb `(not ,symb))))
+                   ,(nth i action-forms)))))))
 (export 'truth-table)
 
 (defmacro case-test (keyform test &body cases)

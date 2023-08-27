@@ -7,3 +7,4 @@
        (multiple-value-bind (,value ,success) (gethash ,key ,hash-table)
          (declare (ignorable ,value))
          (if ,success ,then ,else)))))
+(export 'if-hash)

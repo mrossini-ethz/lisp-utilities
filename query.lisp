@@ -3,10 +3,12 @@
 (defun prompt (str &optional (stream *standard-output*))
   (format stream "~a" str)
   (force-output stream))
+(export 'prompt)
 
 (defun prompt-and-read (str &optional (stream *standard-output*))
   (prompt str stream)
   (read-line))
+(export 'prompt-and-read)
 
 (defun query-integer (prompt &key min max default)
   (flet ((ask () (format t "~a~:[~;~:*[~d] ~]" prompt default) (force-output)))
@@ -38,7 +40,7 @@
         (query-integer (format nil "Choice: ") :min 1 :max (length items)))))
 (export 'query-choice)
 
-(defun query-text (file &key text) 
+(defun query-text (file &key text)
   (let ((editor (sb-ext:posix-getenv "EDITOR")) process)
     (when text
       (write-file-from-string file text :if-does-not-exist :create))
