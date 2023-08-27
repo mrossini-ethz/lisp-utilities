@@ -8,11 +8,11 @@
 (export 'appendf)
 
 ;; Graham
-(defun append-1 (list obj)
+(defun append-1 (obj list)
   (append list (list obj)))
 (export 'append-1)
 
-(defun prepend-1 (list obj)
+(defun prepend-1 (obj list)
   (append (list obj) list))
 (export 'prepend-1)
 

@@ -13,9 +13,20 @@
   (is (let ((x '(1 2 3 4))) (utils:appendf x '(5 6)) (equal x '(1 2 3 4 (5 6))))))
 
 (test append-1
-  (is (equal (utils:append-1 '(1 2 3) nil) '(1 2 3 nil)))
-  (is (equal (utils:append-1 '(1 2 3) 4) '(1 2 3 4)))
-  (is (equal (utils:append-1 '(1 2 3) '(4 5)) '(1 2 3 (4 5)))))
+  (is (equal (utils:append-1 nil nil) '(nil)))
+  (is (equal (utils:append-1 1 nil) '(1)))
+  (is (equal (utils:append-1 '(1 2) nil) '((1 2))))
+  (is (equal (utils:append-1 nil '(1 2 3)) '(1 2 3 nil)))
+  (is (equal (utils:append-1 4 '(1 2 3)) '(1 2 3 4)))
+  (is (equal (utils:append-1 '(4 5) '(1 2 3)) '(1 2 3 (4 5)))))
+
+(test prepend-1
+  (is (equal (utils:prepend-1 nil nil) '(nil)))
+  (is (equal (utils:prepend-1 1 nil) '(1)))
+  (is (equal (utils:prepend-1 '(1 2) nil) '((1 2))))
+  (is (equal (utils:prepend-1 nil '(1 2 3)) '(nil 1 2 3)))
+  (is (equal (utils:prepend-1 0 '(1 2 3)) '(0 1 2 3)))
+  (is (equal (utils:prepend-1 '(0 1) '(2 3 4)) '((0 1) 2 3 4))))
 
 (test last-1
   (is (= (utils:last-1 '(1 2 3 4 5)) 5))
