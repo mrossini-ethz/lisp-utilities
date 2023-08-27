@@ -164,7 +164,7 @@
   (is-false (utils:ll= '(1 2 3 4 5) '(2 3 4 5)))
   (is-false (utils:ll= '(1 2 3 4 5 6) '(2 3 4 5 6))))
 
-(test l/=
+(test ll/=
   (is (utils:ll/= nil '(1)))
   (is (utils:ll/= '(1) '(2 3)))
   (is (utils:ll/= '(1 2) '(2 3 4)))
