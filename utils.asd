@@ -36,6 +36,7 @@
   :serial t
   :components ((:file "test/test")
                (:file "test/test-lists")
+               (:file "test/test-sequence")
                (:file "test/test-string")))
 
 (defmethod perform ((operation test-op) (system (eql (find-system :utils/test))))

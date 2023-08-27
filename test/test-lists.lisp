@@ -341,11 +341,3 @@
   (is (equalp (utils:prune #'evenp '(1 (2 3) 4 5 6 7 8)) '(1 (3) 5 7)))
   (is (equalp (utils:prune #'oddp '(1 2 3 4 (5 6 7) 8)) '(2 4 (6) 8)))
   (is (equalp (utils:prune #'evenp '(1 (2 3 (4 5) (6 7)) 8)) '(1 (3 (5) (7))))))
-
-(test remove-nth
-  (is (equal (utils:remove-nth 0 '(1)) nil))
-  (is (equal (utils:remove-nth 0 '(1 2)) '(2)))
-  (is (equal (utils:remove-nth 1 '(1 2)) '(1)))
-  )
-
-
