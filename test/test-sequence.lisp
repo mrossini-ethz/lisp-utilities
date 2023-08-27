@@ -1107,6 +1107,35 @@
     ;; No index specified
     (is (equal (utils:slice test-list nil) test-list))))
 
+(test sbind
+  ;; Length 0
+  (is (utils:sbind () '() t))
+  (is (utils:sbind () #() t))
+  (is (utils:sbind () "" t))
+  (signals error (utils:sbind (x) '() x))
+  (signals error (utils:sbind (x) #() x))
+  (signals error (utils:sbind (x) "" x))
+  ;; Length 1
+  (signals error (utils:sbind () '(1) t))
+  (signals error (utils:sbind () #(1) t))
+  (signals error (utils:sbind () "1" t))
+  (is (= (utils:sbind (x) '(1) x) 1))
+  (is (= (utils:sbind (x) #(1) x) 1))
+  (is (char= (utils:sbind (x) "1" x) #\1))
+  (signals error (utils:sbind (x y) '(1) x))
+  (signals error (utils:sbind (x y) #(1) x))
+  (signals error (utils:sbind (x y) "1" x))
+  ;; Length 1
+  (signals error (utils:sbind (x) '(1 2) t))
+  (signals error (utils:sbind (x) #(1 2) t))
+  (signals error (utils:sbind (x) "12" t))
+  (is (equal (utils:sbind (x y) '(1 2) (list y x)) '(2 1)))
+  (is (equal (utils:sbind (x y) #(1 2) (list y x)) '(2 1)))
+  (is (equal (utils:sbind (x y) "12" (list y x)) '(#\2 #\1)))
+  (signals error (utils:sbind (x y z) '(1 2) x))
+  (signals error (utils:sbind (x y z) #(1 2) x))
+  (signals error (utils:sbind (x y z) "12" x)))
+
 (test remove-nth
   (is (equal (utils:remove-nth 0 '(1)) nil))
   (is (equal (utils:remove-nth 0 '(1 2)) '(2)))
