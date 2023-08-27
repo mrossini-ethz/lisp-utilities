@@ -179,10 +179,6 @@
       (t (error "Unable to remove item in sequence of type ~a" (type-of sequence))))))
 (export 'remove-nth)
 
-(defun copy-sequence (sequence)
-  (concatenate (type-of sequence) sequence))
-(export 'copy-sequence)
-
 (defun remove-if-index (test sequence)
   (let ((n (length sequence)) (m 0) result)
     ;; Determine number of items for resulting sequence

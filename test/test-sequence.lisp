@@ -1192,19 +1192,6 @@
   ;; Invalid type
   (signals error (utils:remove-nth 0 3)))
 
-(test copy-sequence
-  (is (equalp (utils:copy-sequence '()) '()))
-  (is (equalp (utils:copy-sequence #()) #()))
-  (is (equalp (utils:copy-sequence "") ""))
-  (is-false (eq (utils:copy-sequence #()) #()))
-  (is-false (eq (utils:copy-sequence "") ""))
-  (is (equalp (utils:copy-sequence '(1 2 3)) '(1 2 3)))
-  (is (equalp (utils:copy-sequence #(1 2 3)) #(1 2 3)))
-  (is (equalp (utils:copy-sequence "123") "123"))
-  (is-false (eq (utils:copy-sequence '(1 2 3)) '(1 2 3)))
-  (is-false (eq (utils:copy-sequence #(1 2 3)) #(1 2 3)))
-  (is-false (eq (utils:copy-sequence "123") "123")))
-
 (test remove-if-index
   ;; Remove some
   (is (equal (utils:remove-if-index #'oddp '(0 1 2 3 4 5 6 7)) '(0 2 4 6)))
