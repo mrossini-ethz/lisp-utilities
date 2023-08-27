@@ -1145,6 +1145,18 @@
   (is-false (utils:items-unique-p '(1 2 3 1 5)))
   (is-false (utils:items-unique-p '(1 2 3 4 1))))
 
+(test same
+  (is (utils:same #'= '()))
+  (is (utils:same #'= '(1 1 1 1 1)))
+  (is (utils:same #'char= '(#\1 #\1 #\1 #\1 #\1)))
+  (is-false (utils:same #'= '(2 1 1 1 1)))
+  (is-false (utils:same #'= '(1 2 1 1 1)))
+  (is-false (utils:same #'= '(1 1 2 1 1)))
+  (is-false (utils:same #'= '(1 1 1 2 1)))
+  (is-false (utils:same #'= '(1 1 1 1 2)))
+  (is (utils:same #'= '((1 1) (2 1) (3 1) (4 1) (5 1)) :key #'second))
+  (is-false (utils:same #'= '((1 1) (2 1) (3 1) (4 1) (5 1)) :key #'first)))
+
 (test remove-nth
   (is (equal (utils:remove-nth 0 '(1)) nil))
   (is (equal (utils:remove-nth 0 '(1 2)) '(2)))

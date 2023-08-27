@@ -157,8 +157,10 @@
 
 (defun same (test sequence &key (key #'identity))
   ;; Checks whether every item in the sequence is the same according to test (using key)
-  (let ((first (funcall key (elt sequence 0))))
-    (every #'(lambda (x) (funcall test (funcall key x) first)) sequence)))
+  ;; Assumes the test is commutative and transitive, i.e. if A = B and B = C, then it is assumed that B = A and A = C.
+  (or (zerop (length sequence))
+      (let ((first (funcall key (elt sequence 0))))
+        (every #'(lambda (x) (funcall test (funcall key x) first)) sequence))))
 (export 'same)
 
 (defun have (item sequence &key (test #'eql) (key #'identity))
