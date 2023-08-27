@@ -1174,6 +1174,20 @@
   (is (utils:have "wor" '("hello" "world") :test #'string= :key (lambda (x) (subseq x 0 3)))))
 
 (test remove-nth
+  ;; Invalid indices
+  (signals error (utils:remove-nth 0 '()))
+  (signals error (utils:remove-nth -1 '(1)))
+  ;; List
   (is (equal (utils:remove-nth 0 '(1)) nil))
   (is (equal (utils:remove-nth 0 '(1 2)) '(2)))
-  (is (equal (utils:remove-nth 1 '(1 2)) '(1))))
+  (is (equal (utils:remove-nth 1 '(1 2)) '(1)))
+  ;; String
+  (is (string= (utils:remove-nth 0 "a") ""))
+  (is (string= (utils:remove-nth 0 "ab") "b"))
+  (is (string= (utils:remove-nth 1 "ab") "a"))
+  ;; Vector
+  (is (equalp (utils:remove-nth 0 #(1)) #()))
+  (is (equalp (utils:remove-nth 0 #(1 2)) #(2)))
+  (is (equalp (utils:remove-nth 1 #(1 2)) #(1)))
+  ;; Invalid type
+  (signals error (utils:remove-nth 0 3)))
