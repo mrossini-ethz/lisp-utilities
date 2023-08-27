@@ -308,6 +308,21 @@
   (is (utils:list-index-valid-p 3 '(1 2 3 4)))
   (is-false (utils:list-index-valid-p 4 '(1 2 3 4))))
 
+(test list-flat-p
+  (is (utils:list-flat-p nil))
+  (is (utils:list-flat-p '(nil)))
+  (is (utils:list-flat-p '(nil nil)))
+  (is (utils:list-flat-p '(nil nil nil)))
+  (is (utils:list-flat-p '(1)))
+  (is (utils:list-flat-p '(1 2)))
+  (is (utils:list-flat-p '(1 2 3)))
+  (is (utils:list-flat-p '(1 2 3 4)))
+  (is (utils:list-flat-p '(1 2 3 4 5)))
+  (is-false (utils:list-flat-p '((nil))))
+  (is-false (utils:list-flat-p '((1))))
+  (is-false (utils:list-flat-p '((1) 2 3 4 5)))
+  (is-false (utils:list-flat-p '(1 2 3 4 (5)))))
+
 (test group
   (signals type-error (utils:group '(1 2 3) -1))
   (signals simple-error (utils:group '(1 2 3) 0))
