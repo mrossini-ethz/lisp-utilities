@@ -98,6 +98,14 @@
   (search substring string :test test))
 (export 'substrp)
 
+(defun string-replace (string old new &optional (test #'string=))
+  (let ((n (length old)) (m (length new)) (i 0))
+    (do () ((not (setf i (search old string :test test :start2 i))))
+      (setf string (concatenate 'string (subseq string 0 i) new (subseq string (+ i n))))
+      (incf i m)))
+  string)
+(export 'string-replace)
+
 (defmacro multiline-format (stream &body lines)
   `(progn
      ,@(loop for line in lines append
