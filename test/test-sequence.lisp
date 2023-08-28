@@ -334,8 +334,9 @@
   ;; Invalid argument
   (signals error (utils:s<= 3 0)))
 
-(defmacro s=<>-tester (function test number)
-  `(progn
+(defmacro s=<>x-tester (function test number)
+  `(locally
+     (declare (notinline ,function))
      (loop for i below 10 for lst = (make-list i) for vec = (make-array `(,i)) for str = (make-sequence 'string i) do
        (if (,test i ,number)
            (progn
@@ -349,344 +350,86 @@
      (signals error (,function 5))))
 
 (test s=0
-  (declare (notinline utils:s=0))
-  (s=<>-tester utils:s=0 = 0))
+  (s=<>x-tester utils:s=0 = 0))
 
 (test s=1
-  (declare (notinline utils:s=1))
-  (s=<>-tester utils:s=1 = 1))
+  (s=<>x-tester utils:s=1 = 1))
 
 (test s=2
-  (declare (notinline utils:s=2))
-  (s=<>-tester utils:s=2 = 2))
+  (s=<>x-tester utils:s=2 = 2))
 
 (test s=3
-  (declare (notinline utils:s=3))
-  (s=<>-tester utils:s=3 = 3))
+  (s=<>x-tester utils:s=3 = 3))
 
 (test s=4
-  (declare (notinline utils:s=4))
-  (s=<>-tester utils:s=4 = 4))
+  (s=<>x-tester utils:s=4 = 4))
 
 (test s>0
-  (declare (notinline utils:s>0))
-  (s=<>-tester utils:s>0 > 0))
+  (s=<>x-tester utils:s>0 > 0))
 
 (test s>1
-  (declare (notinline utils:s>1))
-  (s=<>-tester utils:s>1 > 1))
+  (s=<>x-tester utils:s>1 > 1))
 
 (test s>2
-  (declare (notinline utils:s>2))
-  (s=<>-tester utils:s>2 > 2))
+  (s=<>x-tester utils:s>2 > 2))
 
 (test s>3
-  (declare (notinline utils:s>3))
-  (s=<>-tester utils:s>3 > 3))
+  (s=<>x-tester utils:s>3 > 3))
 
 (test s>4
-  (declare (notinline utils:s>4))
-  (s=<>-tester utils:s>4 > 4))
+  (s=<>x-tester utils:s>4 > 4))
 
 (test s<1
-  (declare (notinline utils:s<1))
-  (s=<>-tester utils:s<1 < 1))
+  (s=<>x-tester utils:s<1 < 1))
 
 (test s<2
-  (declare (notinline utils:s<2))
-  (s=<>-tester utils:s<2 < 2))
+  (s=<>x-tester utils:s<2 < 2))
 
 (test s<3
-  (declare (notinline utils:s<3))
-  (s=<>-tester utils:s<3 < 3))
+  (s=<>x-tester utils:s<3 < 3))
 
 (test s<4
-  (declare (notinline utils:s<4))
-  (s=<>-tester utils:s<4 < 4))
+  (s=<>x-tester utils:s<4 < 4))
 
 (test s<5
-  (declare (notinline utils:s<5))
-  (s=<>-tester utils:s<5 < 5))
+  (s=<>x-tester utils:s<5 < 5))
+
+(defmacro ss=<>-tester (function test)
+  `(locally
+     (declare (notinline ,function))
+     ;; Test various combinations of sequence lengths
+     (loop for i below 6 for lst-a = (make-list i :initial-element 1) for vec-a = (make-array `(,i) :initial-element 1) for str-a = (make-string i :initial-element #\1) do
+       (loop for j below 6 for lst-b = (make-list j :initial-element 2) for vec-b = (make-array `(,j) :initial-element 2) for str-b = (make-string j :initial-element #\2) do
+         (if (,test i j)
+             (progn
+               (is (,function lst-a lst-b))
+               (is (,function vec-a vec-b))
+               (is (,function str-a vec-b)))
+             (progn
+               (is-false (,function lst-a lst-b))
+               (is-false (,function vec-a vec-b))
+               (is-false (,function str-a vec-b))))))
+     ;; Is a function
+     (is (identity (function ,function)))
+     ;; Invalid argument type
+     (signals error (,function 3 '(1 2 3)))
+     (signals error (,function '(1 2 3) 3))
+     (signals error (,function 3 0))))
 
 (test ss=
-  (declare (notinline utils:ss=))
-  ;; Zero length
-  (is (utils:ss= '() '()))
-  (is (utils:ss= #() '()))
-  (is (utils:ss= "" '()))
-  (is-false (utils:ss= '() '(5)))
-  (is-false (utils:ss= #() #(5)))
-  (is-false (utils:ss= "" "5"))
-  ;; Length 1
-  (is-false (utils:ss= '(1) '()))
-  (is-false (utils:ss= #(1) #()))
-  (is-false (utils:ss= "1" ""))
-  (is (utils:ss= '(1) '(5)))
-  (is (utils:ss= #(1) #(5)))
-  (is (utils:ss= "1" "5"))
-  (is-false (utils:ss= '(1) '(5 6)))
-  (is-false (utils:ss= #(1) #(5 6)))
-  (is-false (utils:ss= "1" "56"))
-  ;; Length 2
-  (is-false (utils:ss= '(1 2) '(5)))
-  (is-false (utils:ss= #(1 2) #(5)))
-  (is-false (utils:ss= "12" "5"))
-  (is (utils:ss= '(1 2) '(5 6)))
-  (is (utils:ss= #(1 2) #(5 6)))
-  (is (utils:ss= "12" "56"))
-  (is-false (utils:ss= '(1 2) '(7 8 9)))
-  (is-false (utils:ss= #(1 2) #(7 8 9)))
-  (is-false (utils:ss= "12" "789"))
-  ;; Length 3
-  (is-false (utils:ss= '(1 2 3) '(5 6)))
-  (is-false (utils:ss= #(1 2 3) #(5 6)))
-  (is-false (utils:ss= "123" "56"))
-  (is (utils:ss= '(1 2 3) '(5 6 7)))
-  (is (utils:ss= #(1 2 3) #(5 6 7)))
-  (is (utils:ss= "123" "567"))
-  (is-false (utils:ss= '(1 2 3) '(5 6 7 8)))
-  (is-false (utils:ss= #(1 2 3) #(5 6 7 8)))
-  (is-false (utils:ss= "123" "5678"))
-  ;; Length 4
-  (is-false (utils:ss= '(1 2 3 4) '(5 6 7)))
-  (is-false (utils:ss= #(1 2 3 4) #(5 6 7)))
-  (is-false (utils:ss= "1234" "567"))
-  (is (utils:ss= '(1 2 3 4) '(5 6 7 8)))
-  (is (utils:ss= #(1 2 3 4) #(5 6 7 8)))
-  (is (utils:ss= "1234" "5678"))
-  (is-false (utils:ss= '(1 2 3 4) '(5 6 7 8 9)))
-  (is-false (utils:ss= #(1 2 3 4) #(5 6 7 8 9)))
-  (is-false (utils:ss= "1234" "56789"))
-  ;; Is a function
-  (is (identity (function utils:ss=)))
-  ;; Invalid argument
-  (signals error (utils:ss= 3 '(1 2 3)))
-  (signals error (utils:ss= '(1 2 3) 3))
-  (signals error (utils:ss= 3 0)))
+  (ss=<>-tester utils:ss= =))
 
 (test ss>
-  (declare (notinline utils:ss>))
-  ;; Zero length
-  (is-false (utils:ss> '() '()))
-  (is-false (utils:ss> #() '()))
-  (is-false (utils:ss> "" '()))
-  (is-false (utils:ss> '() '(5)))
-  (is-false (utils:ss> #() #(5)))
-  (is-false (utils:ss> "" "5"))
-  ;; Length 1
-  (is (utils:ss> '(1) '()))
-  (is (utils:ss> #(1) #()))
-  (is (utils:ss> "1" ""))
-  (is-false (utils:ss> '(1) '(5)))
-  (is-false (utils:ss> #(1) #(5)))
-  (is-false (utils:ss> "1" "5"))
-  (is-false (utils:ss> '(1) '(5 6)))
-  (is-false (utils:ss> #(1) #(5 6)))
-  (is-false (utils:ss> "1" "56"))
-  ;; Length 2
-  (is (utils:ss> '(1 2) '(5)))
-  (is (utils:ss> #(1 2) #(5)))
-  (is (utils:ss> "12" "5"))
-  (is-false (utils:ss> '(1 2) '(5 6)))
-  (is-false (utils:ss> #(1 2) #(5 6)))
-  (is-false (utils:ss> "12" "56"))
-  (is-false (utils:ss> '(1 2) '(7 8 9)))
-  (is-false (utils:ss> #(1 2) #(7 8 9)))
-  (is-false (utils:ss> "12" "789"))
-  ;; Length 3
-  (is (utils:ss> '(1 2 3) '(5 6)))
-  (is (utils:ss> #(1 2 3) #(5 6)))
-  (is (utils:ss> "123" "56"))
-  (is-false (utils:ss> '(1 2 3) '(5 6 7)))
-  (is-false (utils:ss> #(1 2 3) #(5 6 7)))
-  (is-false (utils:ss> "123" "567"))
-  (is-false (utils:ss> '(1 2 3) '(5 6 7 8)))
-  (is-false (utils:ss> #(1 2 3) #(5 6 7 8)))
-  (is-false (utils:ss> "123" "5678"))
-  ;; Length 4
-  (is (utils:ss> '(1 2 3 4) '(5 6 7)))
-  (is (utils:ss> #(1 2 3 4) #(5 6 7)))
-  (is (utils:ss> "1234" "567"))
-  (is-false (utils:ss> '(1 2 3 4) '(5 6 7 8)))
-  (is-false (utils:ss> #(1 2 3 4) #(5 6 7 8)))
-  (is-false (utils:ss> "1234" "5678"))
-  (is-false (utils:ss> '(1 2 3 4) '(5 6 7 8 9)))
-  (is-false (utils:ss> #(1 2 3 4) #(5 6 7 8 9)))
-  (is-false (utils:ss> "1234" "56789"))
-  ;; Is a function
-  (is (identity (function utils:ss>)))
-  ;; Invalid argument
-  (signals error (utils:ss> 3 '(1 2 3)))
-  (signals error (utils:ss> '(1 2 3) 3))
-  (signals error (utils:ss> 3 0)))
+  (ss=<>-tester utils:ss> >))
 
 (test ss<
-  (declare (notinline utils:ss<))
-  ;; Zero length
-  (is-false (utils:ss< '() '()))
-  (is-false (utils:ss< #() '()))
-  (is-false (utils:ss< "" '()))
-  (is (utils:ss< '() '(5)))
-  (is (utils:ss< #() #(5)))
-  (is (utils:ss< "" "5"))
-  ;; Length 1
-  (is-false (utils:ss< '(1) '()))
-  (is-false (utils:ss< #(1) #()))
-  (is-false (utils:ss< "1" ""))
-  (is-false (utils:ss< '(1) '(5)))
-  (is-false (utils:ss< #(1) #(5)))
-  (is-false (utils:ss< "1" "5"))
-  (is (utils:ss< '(1) '(5 6)))
-  (is (utils:ss< #(1) #(5 6)))
-  (is (utils:ss< "1" "56"))
-  ;; Length 2
-  (is-false (utils:ss< '(1 2) '(5)))
-  (is-false (utils:ss< #(1 2) #(5)))
-  (is-false (utils:ss< "12" "5"))
-  (is-false (utils:ss< '(1 2) '(5 6)))
-  (is-false (utils:ss< #(1 2) #(5 6)))
-  (is-false (utils:ss< "12" "56"))
-  (is (utils:ss< '(1 2) '(7 8 9)))
-  (is (utils:ss< #(1 2) #(7 8 9)))
-  (is (utils:ss< "12" "789"))
-  ;; Length 3
-  (is-false (utils:ss< '(1 2 3) '(5 6)))
-  (is-false (utils:ss< #(1 2 3) #(5 6)))
-  (is-false (utils:ss< "123" "56"))
-  (is-false (utils:ss< '(1 2 3) '(5 6 7)))
-  (is-false (utils:ss< #(1 2 3) #(5 6 7)))
-  (is-false (utils:ss< "123" "567"))
-  (is (utils:ss< '(1 2 3) '(5 6 7 8)))
-  (is (utils:ss< #(1 2 3) #(5 6 7 8)))
-  (is (utils:ss< "123" "5678"))
-  ;; Length 4
-  (is-false (utils:ss< '(1 2 3 4) '(5 6 7)))
-  (is-false (utils:ss< #(1 2 3 4) #(5 6 7)))
-  (is-false (utils:ss< "1234" "567"))
-  (is-false (utils:ss< '(1 2 3 4) '(5 6 7 8)))
-  (is-false (utils:ss< #(1 2 3 4) #(5 6 7 8)))
-  (is-false (utils:ss< "1234" "5678"))
-  (is (utils:ss< '(1 2 3 4) '(5 6 7 8 9)))
-  (is (utils:ss< #(1 2 3 4) #(5 6 7 8 9)))
-  (is (utils:ss< "1234" "56789"))
-  ;; Is a function
-  (is (identity (function utils:ss<)))
-  ;; Invalid argument
-  (signals error (utils:ss< 3 '(1 2 3)))
-  (signals error (utils:ss< '(1 2 3) 3))
-  (signals error (utils:ss< 3 0)))
+  (ss=<>-tester utils:ss< <))
 
 (test ss>=
-  (declare (notinline utils:ss>=))
-  ;; Zero length
-  (is (utils:ss>= '() '()))
-  (is (utils:ss>= #() '()))
-  (is (utils:ss>= "" '()))
-  (is-false (utils:ss>= '() '(5)))
-  (is-false (utils:ss>= #() #(5)))
-  (is-false (utils:ss>= "" "5"))
-  ;; Length 1
-  (is (utils:ss>= '(1) '()))
-  (is (utils:ss>= #(1) #()))
-  (is (utils:ss>= "1" ""))
-  (is (utils:ss>= '(1) '(5)))
-  (is (utils:ss>= #(1) #(5)))
-  (is (utils:ss>= "1" "5"))
-  (is-false (utils:ss>= '(1) '(5 6)))
-  (is-false (utils:ss>= #(1) #(5 6)))
-  (is-false (utils:ss>= "1" "56"))
-  ;; Length 2
-  (is (utils:ss>= '(1 2) '(5)))
-  (is (utils:ss>= #(1 2) #(5)))
-  (is (utils:ss>= "12" "5"))
-  (is (utils:ss>= '(1 2) '(5 6)))
-  (is (utils:ss>= #(1 2) #(5 6)))
-  (is (utils:ss>= "12" "56"))
-  (is-false (utils:ss>= '(1 2) '(7 8 9)))
-  (is-false (utils:ss>= #(1 2) #(7 8 9)))
-  (is-false (utils:ss>= "12" "789"))
-  ;; Length 3
-  (is (utils:ss>= '(1 2 3) '(5 6)))
-  (is (utils:ss>= #(1 2 3) #(5 6)))
-  (is (utils:ss>= "123" "56"))
-  (is (utils:ss>= '(1 2 3) '(5 6 7)))
-  (is (utils:ss>= #(1 2 3) #(5 6 7)))
-  (is (utils:ss>= "123" "567"))
-  (is-false (utils:ss>= '(1 2 3) '(5 6 7 8)))
-  (is-false (utils:ss>= #(1 2 3) #(5 6 7 8)))
-  (is-false (utils:ss>= "123" "5678"))
-  ;; Length 4
-  (is (utils:ss>= '(1 2 3 4) '(5 6 7)))
-  (is (utils:ss>= #(1 2 3 4) #(5 6 7)))
-  (is (utils:ss>= "1234" "567"))
-  (is (utils:ss>= '(1 2 3 4) '(5 6 7 8)))
-  (is (utils:ss>= #(1 2 3 4) #(5 6 7 8)))
-  (is (utils:ss>= "1234" "5678"))
-  (is-false (utils:ss>= '(1 2 3 4) '(5 6 7 8 9)))
-  (is-false (utils:ss>= #(1 2 3 4) #(5 6 7 8 9)))
-  (is-false (utils:ss>= "1234" "56789"))
-  ;; Is a function
-  (is (identity (function utils:ss>=)))
-  ;; Invalid argument
-  (signals error (utils:ss>= 3 '(1 2 3)))
-  (signals error (utils:ss>= '(1 2 3) 3))
-  (signals error (utils:ss>= 3 0)))
+  (ss=<>-tester utils:ss>= >=))
 
 (test ss<=
-  (declare (notinline utils:ss<=))
-  ;; Zero length
-  (is (utils:ss<= '() '()))
-  (is (utils:ss<= #() '()))
-  (is (utils:ss<= "" '()))
-  (is (utils:ss<= '() '(5)))
-  (is (utils:ss<= #() #(5)))
-  (is (utils:ss<= "" "5"))
-  ;; Length 1
-  (is-false (utils:ss<= '(1) '()))
-  (is-false (utils:ss<= #(1) #()))
-  (is-false (utils:ss<= "1" ""))
-  (is (utils:ss<= '(1) '(5)))
-  (is (utils:ss<= #(1) #(5)))
-  (is (utils:ss<= "1" "5"))
-  (is (utils:ss<= '(1) '(5 6)))
-  (is (utils:ss<= #(1) #(5 6)))
-  (is (utils:ss<= "1" "56"))
-  ;; Length 2
-  (is-false (utils:ss<= '(1 2) '(5)))
-  (is-false (utils:ss<= #(1 2) #(5)))
-  (is-false (utils:ss<= "12" "5"))
-  (is (utils:ss<= '(1 2) '(5 6)))
-  (is (utils:ss<= #(1 2) #(5 6)))
-  (is (utils:ss<= "12" "56"))
-  (is (utils:ss<= '(1 2) '(7 8 9)))
-  (is (utils:ss<= #(1 2) #(7 8 9)))
-  (is (utils:ss<= "12" "789"))
-  ;; Length 3
-  (is-false (utils:ss<= '(1 2 3) '(5 6)))
-  (is-false (utils:ss<= #(1 2 3) #(5 6)))
-  (is-false (utils:ss<= "123" "56"))
-  (is (utils:ss<= '(1 2 3) '(5 6 7)))
-  (is (utils:ss<= #(1 2 3) #(5 6 7)))
-  (is (utils:ss<= "123" "567"))
-  (is (utils:ss<= '(1 2 3) '(5 6 7 8)))
-  (is (utils:ss<= #(1 2 3) #(5 6 7 8)))
-  (is (utils:ss<= "123" "5678"))
-  ;; Length 4
-  (is-false (utils:ss<= '(1 2 3 4) '(5 6 7)))
-  (is-false (utils:ss<= #(1 2 3 4) #(5 6 7)))
-  (is-false (utils:ss<= "1234" "567"))
-  (is (utils:ss<= '(1 2 3 4) '(5 6 7 8)))
-  (is (utils:ss<= #(1 2 3 4) #(5 6 7 8)))
-  (is (utils:ss<= "1234" "5678"))
-  (is (utils:ss<= '(1 2 3 4) '(5 6 7 8 9)))
-  (is (utils:ss<= #(1 2 3 4) #(5 6 7 8 9)))
-  (is (utils:ss<= "1234" "56789"))
-  ;; Is a function
-  (is (identity (function utils:ss<=)))
-  ;; Invalid argument
-  (signals error (utils:ss<= 3 '(1 2 3)))
-  (signals error (utils:ss<= '(1 2 3) 3))
-  (signals error (utils:ss<= 3 0)))
+  (ss=<>-tester utils:ss<= <=))
 
 (test slice-0
   (let ((n 0) (test-list '()))
