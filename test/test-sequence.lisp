@@ -86,7 +86,7 @@
 (defmacro s=<>x-tester (function test number)
   `(locally
      (declare (notinline ,function))
-     (loop for i below 10 for lst = (make-list i) for vec = (make-array `(,i)) for str = (make-sequence 'string i) do
+     (loop for i below 10 for lst = (make-list i :initial-element 1) for vec = (make-array `(,i) :initial-element 1) for str = (make-string i :initial-element #\1) do
        (if (,test i ,number)
            (progn
              (is (,function lst))
