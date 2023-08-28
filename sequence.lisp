@@ -106,6 +106,11 @@
   (< (length sequence) 4))
 (export 's<4)
 
+(declaim (inline s<5))
+(defun s<5 (sequence)
+  (< (length sequence) 5))
+(export 's<5)
+
 ;; --- ss= family of functions -----------------------------------------------------------------------------
 
 (declaim (inline ss=))
