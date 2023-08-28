@@ -54,6 +54,20 @@
   (string-trim '(#\newline #\return #\space #\tab) str))
 (export 'strtrim)
 
+(defun ljust (str n)
+  (let ((len (length str)))
+    (if (< len n)
+        (concatenate 'string str (make-sequence 'string (- n len) :initial-element #\Space))
+        str)))
+(export 'ljust)
+
+(defun rjust (str n)
+  (let ((len (length str)))
+    (if (< len n)
+        (concatenate 'string (make-sequence 'string (- n len) :initial-element #\Space) str)
+        str)))
+(export 'rjust)
+
 (defun string^= (string beginning)
   "Tests whether 'string' begins with 'beginning'"
   (let ((n (length string)) (m (length beginning)))
