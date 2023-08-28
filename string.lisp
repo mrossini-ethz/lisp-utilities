@@ -68,6 +68,20 @@
         str)))
 (export 'rjust)
 
+(defun remove-prefix (string prefix &key (test #'string=))
+  (let ((m (length prefix)) (n (length string)))
+    (if (and (>= n m) (funcall test (subseq string 0 m) prefix))
+        (subseq string m)
+        string)))
+(export 'remove-prefix)
+
+(defun remove-suffix (string suffix &key (test #'string=))
+  (let ((m (length suffix)) (n (length string)))
+    (if (and (>= n m) (funcall test (subseq string (- n m)) suffix))
+        (subseq string 0 (- n m))
+        string)))
+(export 'remove-suffix)
+
 (defun string^= (string beginning)
   "Tests whether 'string' begins with 'beginning'"
   (let ((n (length string)) (m (length beginning)))
