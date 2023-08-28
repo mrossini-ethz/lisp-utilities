@@ -20,7 +20,7 @@
         (do ((,var ,a (+ ,var ,step))) ((<= ,var ,b)) ,@body))
        (t (error "Invalid range")))))
 
-(defmacro foreach ((item) sequence &body body)
+(defmacro foreach ((item sequence) &body body)
   "Iterates over each sequence item and executes the given code."
   `(with-escape break
      (map nil (lambda (,item) (with-escape continue ,@body)) ,sequence)))
