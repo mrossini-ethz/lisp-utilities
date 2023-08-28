@@ -207,3 +207,10 @@
         (loop for v downfrom a above b by (- step) for i upfrom 0 do (setf (elt result i) v))
         result)))
 (export 'range)
+
+(defun linspace (a b n &key (type 'list))
+  (check-type n (integer 2))
+  (let ((step (/ (coerce (- b a) 'double-float) (1- n))))
+    (let ((result (make-sequence type n)))
+      (loop for i below n do (setf (elt result i) (+ a (* i step))))
+      result)))
