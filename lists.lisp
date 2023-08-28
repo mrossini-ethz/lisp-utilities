@@ -140,22 +140,22 @@
 
 (declaim (inline l<2))
 (defun l<2 (list)
-  (not (l>1 list)))
+  (or (l=0 list) (l=1 list)))
 (export 'l<2)
 
 (declaim (inline l<3))
 (defun l<3 (list)
-  (not (l>2 list)))
+  (or (l=0 list) (l=1 list) (l=2 list)))
 (export 'l<3)
 
 (declaim (inline l<4))
 (defun l<4 (list)
-  (not (l>3 list)))
+  (or (l=0 list) (l=1 list) (l=2 list) (l=3 list)))
 (export 'l<4)
 
 (declaim (inline l<5))
 (defun l<5 (list)
-  (not (l>4 list)))
+  (or (l=0 list) (l=1 list) (l=2 list) (l=3 list) (l=4 list)))
 (export 'l<5)
 
 ;; Family of functions that test the lengths of two lists against each other without iterating through all members
