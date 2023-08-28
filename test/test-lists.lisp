@@ -42,236 +42,89 @@
   (is (equal (utils:mklist '(3 4)) '(3 4)))
   (is (equalp (utils:mklist #(3 4)) '(#(3 4)))))
 
+(defmacro l=<>-tester (function test)
+  `(locally
+     (declare (notinline ,function))
+     (loop for i below 10 for lst = (make-list i :initial-element 1) do
+       (loop for j below 10 do
+         (if (,test i j)
+             (is (,function lst j))
+             (is-false (,function lst j)))))
+     ;; Is a function
+     (is (identity (function ,function)))
+     ;; Invalid argument type
+     (signals error (,function 3 3))
+     (signals error (,function #(1 2 3) 3))
+     (signals error (,function "123" 3))))
+
 (test l=
-  (is (utils:l= '() 0))
-  (is (utils:l= '(1) 1))
-  (is (utils:l= '(1 2) 2))
-  (is (utils:l= '(1 2 3) 3))
-  (is (utils:l= '(1 2 3 4) 4))
-  (is-false (utils:l= '() 1))
-  (is-false (utils:l= '(1) 2))
-  (is-false (utils:l= '(1 2) 3))
-  (is-false (utils:l= '(1 2 3) 4))
-  (is-false (utils:l= '(1 2 3 4) 5))
-  (is-false (utils:l= '() -1))
-  (is-false (utils:l= '(1) 0))
-  (is-false (utils:l= '(1 2) 1))
-  (is-false (utils:l= '(1 2 3) 2))
-  (is-false (utils:l= '(1 2 3 4) 3))
-  (signals type-error (utils:l= #(1 2 3 4) 4)))
+  (l=<>-tester utils:l= =))
 
 (test l/=
-  (declare (notinline utils:l/=))
-  (is-false (utils:l/= '() 0))
-  (is-false (utils:l/= '(1) 1))
-  (is-false (utils:l/= '(1 2) 2))
-  (is-false (utils:l/= '(1 2 3) 3))
-  (is-false (utils:l/= '(1 2 3 4) 4))
-  (is (utils:l/= '() 1))
-  (is (utils:l/= '(1) 2))
-  (is (utils:l/= '(1 2) 3))
-  (is (utils:l/= '(1 2 3) 4))
-  (is (utils:l/= '(1 2 3 4) 5))
-  (is (utils:l/= '() -1))
-  (is (utils:l/= '(1) 0))
-  (is (utils:l/= '(1 2) 1))
-  (is (utils:l/= '(1 2 3) 2))
-  (is (utils:l/= '(1 2 3 4) 3))
-  (signals type-error (utils:l/= #(1 2 3 4) 3)))
+  (l=<>-tester utils:l/= /=))
 
 (test l>
-  (is-false (utils:l> '() 0))
-  (is-false (utils:l> '(1) 1))
-  (is-false (utils:l> '(1 2) 2))
-  (is-false (utils:l> '(1 2 3) 3))
-  (is-false (utils:l> '(1 2 3 4) 4))
-  (is-false (utils:l> '() 1))
-  (is-false (utils:l> '(1) 2))
-  (is-false (utils:l> '(1 2) 3))
-  (is-false (utils:l> '(1 2 3) 4))
-  (is-false (utils:l> '(1 2 3 4) 5))
-  (is (utils:l> '() -1))
-  (is (utils:l> '(1) 0))
-  (is (utils:l> '(1 2) 1))
-  (is (utils:l> '(1 2 3) 2))
-  (is (utils:l> '(1 2 3 4) 3))
-  (signals type-error (utils:l> #(1 2 3 4) 3)))
-
-(test l<=
-  (declare (notinline utils:l<=))
-  (is (utils:l<= '() 0))
-  (is (utils:l<= '(1) 1))
-  (is (utils:l<= '(1 2) 2))
-  (is (utils:l<= '(1 2 3) 3))
-  (is (utils:l<= '(1 2 3 4) 4))
-  (is (utils:l<= '() 1))
-  (is (utils:l<= '(1) 2))
-  (is (utils:l<= '(1 2) 3))
-  (is (utils:l<= '(1 2 3) 4))
-  (is (utils:l<= '(1 2 3 4) 5))
-  (is-false (utils:l<= '() -1))
-  (is-false (utils:l<= '(1) 0))
-  (is-false (utils:l<= '(1 2) 1))
-  (is-false (utils:l<= '(1 2 3) 2))
-  (is-false (utils:l<= '(1 2 3 4) 3))
-  (signals type-error (utils:l<= #(1 2 3 4) 5)))
+  (l=<>-tester utils:l> >))
 
 (test l<
-  (is-false (utils:l< '() 0))
-  (is-false (utils:l< '(1) 1))
-  (is-false (utils:l< '(1 2) 2))
-  (is-false (utils:l< '(1 2 3) 3))
-  (is-false (utils:l< '(1 2 3 4) 4))
-  (is (utils:l< '() 1))
-  (is (utils:l< '(1) 2))
-  (is (utils:l< '(1 2) 3))
-  (is (utils:l< '(1 2 3) 4))
-  (is (utils:l< '(1 2 3 4) 5))
-  (is-false (utils:l< '() -1))
-  (is-false (utils:l< '(1) 0))
-  (is-false (utils:l< '(1 2) 1))
-  (is-false (utils:l< '(1 2 3) 2))
-  (is-false (utils:l< '(1 2 3 4) 3))
-  (signals type-error (utils:l< #(1 2 3 4) 5)))
+  (l=<>-tester utils:l< <))
 
 (test l>=
-  (declare (notinline utils:l>=))
-  (is (utils:l>= '() 0))
-  (is (utils:l>= '(1) 1))
-  (is (utils:l>= '(1 2) 2))
-  (is (utils:l>= '(1 2 3) 3))
-  (is (utils:l>= '(1 2 3 4) 4))
-  (is-false (utils:l>= '() 1))
-  (is-false (utils:l>= '(1) 2))
-  (is-false (utils:l>= '(1 2) 3))
-  (is-false (utils:l>= '(1 2 3) 4))
-  (is-false (utils:l>= '(1 2 3 4) 5))
-  (is (utils:l>= '() -1))
-  (is (utils:l>= '(1) 0))
-  (is (utils:l>= '(1 2) 1))
-  (is (utils:l>= '(1 2 3) 2))
-  (is (utils:l>= '(1 2 3 4) 3))
-  (signals type-error (utils:l>= #(1 2 3 4) 4)))
+  (l=<>-tester utils:l>= >=))
+
+(test l<=
+  (l=<>-tester utils:l<= <=))
+
+(defmacro l=<>x-tester (function test number)
+  `(locally
+     (declare (notinline ,function))
+     (loop for i below 10 for lst = (make-list i :initial-element 1) do
+       (if (,test i ,number)
+           (is (,function lst))
+           (is-false (,function lst))))
+     (signals error (,function ,number))))
 
 (test l=0
-  (declare (notinline utils:l=0))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (= i 0)
-        (is (utils:l=0 lst))
-        (is-false (utils:l=0 lst))))
-  (signals error (utils:l=0 5)))
+  (l=<>x-tester utils:l=0 = 0))
 
 (test l=1
-  (declare (notinline utils:l=1))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (= i 1)
-        (is (utils:l=1 lst))
-        (is-false (utils:l=1 lst))))
-  (signals error (utils:l=1 5)))
+  (l=<>x-tester utils:l=1 = 1))
 
 (test l=2
-  (declare (notinline utils:l=2))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (= i 2)
-        (is (utils:l=2 lst))
-        (is-false (utils:l=2 lst))))
-  (signals error (utils:l=2 5)))
+  (l=<>x-tester utils:l=2 = 2))
 
 (test l=3
-  (declare (notinline utils:l=3))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (= i 3)
-        (is (utils:l=3 lst))
-        (is-false (utils:l=3 lst))))
-  (signals error (utils:l=3 5)))
+  (l=<>x-tester utils:l=3 = 3))
 
 (test l=4
-  (declare (notinline utils:l=4))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (= i 4)
-        (is (utils:l=4 lst))
-        (is-false (utils:l=4 lst))))
-  (signals error (utils:l=4 5)))
+  (l=<>x-tester utils:l=4 = 4))
 
 (test l>0
-  (declare (notinline utils:l>0))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (> i 0)
-        (is (utils:l>0 lst))
-        (is-false (utils:l>0 lst))))
-  (signals error (utils:l>0 5)))
+  (l=<>x-tester utils:l>0 > 0))
 
 (test l>1
-  (declare (notinline utils:l>1))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (> i 1)
-        (is (utils:l>1 lst))
-        (is-false (utils:l>1 lst))))
-  (signals error (utils:l>1 5)))
+  (l=<>x-tester utils:l>1 > 1))
 
 (test l>2
-  (declare (notinline utils:l>2))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (> i 2)
-        (is (utils:l>2 lst))
-        (is-false (utils:l>2 lst))))
-  (signals error (utils:l>2 5)))
+  (l=<>x-tester utils:l>2 > 2))
 
 (test l>3
-  (declare (notinline utils:l>3))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (> i 3)
-        (is (utils:l>3 lst))
-        (is-false (utils:l>3 lst))))
-  (signals error (utils:l>3 5)))
-
-(test l>4
-  (declare (notinline utils:l>4))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (> i 4)
-        (is (utils:l>4 lst))
-        (is-false (utils:l>4 lst))))
-  (signals error (utils:l>4 5)))
+  (l=<>x-tester utils:l>3 > 3))
 
 (test l<1
-  (declare (notinline utils:l<1))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (< i 1)
-        (is (utils:l<1 lst))
-        (is-false (utils:l<1 lst))))
-  (signals error (utils:l<1 5)))
+  (l=<>x-tester utils:l<1 < 1))
 
 (test l<2
-  (declare (notinline utils:l<2))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (< i 2)
-        (is (utils:l<2 lst))
-        (is-false (utils:l<2 lst))))
-  (signals error (utils:l<2 5)))
+  (l=<>x-tester utils:l<2 < 2))
 
 (test l<3
-  (declare (notinline utils:l<3))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (< i 3)
-        (is (utils:l<3 lst))
-        (is-false (utils:l<3 lst))))
-  (signals error (utils:l<3 5)))
+  (l=<>x-tester utils:l<3 < 3))
 
 (test l<4
-  (declare (notinline utils:l<4))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (< i 4)
-        (is (utils:l<4 lst))
-        (is-false (utils:l<4 lst))))
-  (signals error (utils:l<4 5)))
+  (l=<>x-tester utils:l<4 < 4))
 
 (test l<5
-  (declare (notinline utils:l<5))
-  (loop for i below 10 for lst = (make-list i) do
-    (if (< i 5)
-        (is (utils:l<5 lst))
-        (is-false (utils:l<5 lst))))
-  (signals error (utils:l<5 5)))
+  (l=<>x-tester utils:l<5 < 5))
 
 (test ll=
   (is-false (utils:ll= nil '(1)))
