@@ -4,6 +4,10 @@
   `(funcall ,(formatter "~{~s = ~s~^, ~}~%") *standard-output* (list ,@(apply #'append (loop for obj in objects collect `(',obj ,obj))))))
 (export 'dp)
 
+(defmacro dpl (list)
+  `(apply ,(formatter "~s:~%~{~s~%~}") *standard-output* (list ',list ,list)))
+(export 'dpl)
+
 (defmacro with-print-retval (form)
   (with-gensyms (result)
     `(let ((,result ,form))
