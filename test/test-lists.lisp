@@ -153,11 +153,125 @@
   (is (utils:l>= '(1 2 3 4) 3))
   (signals type-error (utils:l>= #(1 2 3 4) 4)))
 
-(test single
-  (declare (notinline utils:single))
-  (is (utils:single '(3)))
-  (is-false (utils:single '()))
-  (is-false (utils:single '(3 4))))
+(test l=0
+  (declare (notinline utils:l=0))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (= i 0)
+        (is (utils:l=0 lst))
+        (is-false (utils:l=0 lst))))
+  (signals error (utils:l=0 5)))
+
+(test l=1
+  (declare (notinline utils:l=1))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (= i 1)
+        (is (utils:l=1 lst))
+        (is-false (utils:l=1 lst))))
+  (signals error (utils:l=1 5)))
+
+(test l=2
+  (declare (notinline utils:l=2))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (= i 2)
+        (is (utils:l=2 lst))
+        (is-false (utils:l=2 lst))))
+  (signals error (utils:l=2 5)))
+
+(test l=3
+  (declare (notinline utils:l=3))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (= i 3)
+        (is (utils:l=3 lst))
+        (is-false (utils:l=3 lst))))
+  (signals error (utils:l=3 5)))
+
+(test l=4
+  (declare (notinline utils:l=4))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (= i 4)
+        (is (utils:l=4 lst))
+        (is-false (utils:l=4 lst))))
+  (signals error (utils:l=4 5)))
+
+(test l>0
+  (declare (notinline utils:l>0))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (> i 0)
+        (is (utils:l>0 lst))
+        (is-false (utils:l>0 lst))))
+  (signals error (utils:l>0 5)))
+
+(test l>1
+  (declare (notinline utils:l>1))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (> i 1)
+        (is (utils:l>1 lst))
+        (is-false (utils:l>1 lst))))
+  (signals error (utils:l>1 5)))
+
+(test l>2
+  (declare (notinline utils:l>2))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (> i 2)
+        (is (utils:l>2 lst))
+        (is-false (utils:l>2 lst))))
+  (signals error (utils:l>2 5)))
+
+(test l>3
+  (declare (notinline utils:l>3))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (> i 3)
+        (is (utils:l>3 lst))
+        (is-false (utils:l>3 lst))))
+  (signals error (utils:l>3 5)))
+
+(test l>4
+  (declare (notinline utils:l>4))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (> i 4)
+        (is (utils:l>4 lst))
+        (is-false (utils:l>4 lst))))
+  (signals error (utils:l>4 5)))
+
+(test l<1
+  (declare (notinline utils:l<1))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (< i 1)
+        (is (utils:l<1 lst))
+        (is-false (utils:l<1 lst))))
+  (signals error (utils:l<1 5)))
+
+(test l<2
+  (declare (notinline utils:l<2))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (< i 2)
+        (is (utils:l<2 lst))
+        (is-false (utils:l<2 lst))))
+  (signals error (utils:l<2 5)))
+
+(test l<3
+  (declare (notinline utils:l<3))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (< i 3)
+        (is (utils:l<3 lst))
+        (is-false (utils:l<3 lst))))
+  (signals error (utils:l<3 5)))
+
+(test l<4
+  (declare (notinline utils:l<4))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (< i 4)
+        (is (utils:l<4 lst))
+        (is-false (utils:l<4 lst))))
+  (signals error (utils:l<4 5)))
+
+(test l<5
+  (declare (notinline utils:l<5))
+  (loop for i below 10 for lst = (make-list i) do
+    (if (< i 5)
+        (is (utils:l<5 lst))
+        (is-false (utils:l<5 lst))))
+  (signals error (utils:l<5 5)))
 
 (test ll=
   (is-false (utils:ll= nil '(1)))
