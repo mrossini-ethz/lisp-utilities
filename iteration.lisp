@@ -8,6 +8,18 @@
          ,@body))))
 (export 'with-escape)
 
+(defmacro for-range ((var a &optional (b nil b-supplied-p) (step 1)) &body body)
+  (unless b-supplied-p
+    (setf b a)
+    (setf a 0))
+  (once-only (a b step)
+    `(cond
+       ((and (< ,a ,b) (plusp ,step))
+        (do ((,var ,a (+ ,var ,step))) ((>= ,var ,b)) ,@body))
+       ((and (> ,a ,b) (minusp ,step))
+        (do ((,var ,a (+ ,var ,step))) ((<= ,var ,b)) ,@body))
+       (t (error "Invalid range")))))
+
 (defmacro foreach ((item) sequence &body body)
   "Iterates over each sequence item and executes the given code."
   `(with-escape break
