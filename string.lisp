@@ -54,17 +54,17 @@
   (string-trim '(#\newline #\return #\space #\tab) str))
 (export 'strtrim)
 
-(defun ljust (str n)
+(defun ljust (str n &optional (fill-char #\Space))
   (let ((len (length str)))
     (if (< len n)
-        (concatenate 'string str (make-sequence 'string (- n len) :initial-element #\Space))
+        (concatenate 'string str (make-sequence 'string (- n len) :initial-element fill-char))
         str)))
 (export 'ljust)
 
-(defun rjust (str n)
+(defun rjust (str n &optional (fill-char #\Space))
   (let ((len (length str)))
     (if (< len n)
-        (concatenate 'string (make-sequence 'string (- n len) :initial-element #\Space) str)
+        (concatenate 'string (make-sequence 'string (- n len) :initial-element fill-char) str)
         str)))
 (export 'rjust)
 
