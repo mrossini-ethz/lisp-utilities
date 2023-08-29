@@ -42,7 +42,7 @@
   (is (equal (utils:mklist '(3 4)) '(3 4)))
   (is (equalp (utils:mklist #(3 4)) '(#(3 4)))))
 
-(defmacro l=<>-tester (function test)
+(defmacro l=</>-tester (function test)
   `(locally
      (declare (notinline ,function))
      (loop for i below 10 for lst = (make-list i :initial-element 1) do
@@ -58,24 +58,24 @@
      (signals error (,function "123" 3))))
 
 (test l=
-  (l=<>-tester utils:l= =))
+  (l=</>-tester utils:l= =))
 
 (test l/=
-  (l=<>-tester utils:l/= /=))
+  (l=</>-tester utils:l/= /=))
 
 (test l>
-  (l=<>-tester utils:l> >))
+  (l=</>-tester utils:l> >))
 
 (test l<
-  (l=<>-tester utils:l< <))
+  (l=</>-tester utils:l< <))
 
 (test l>=
-  (l=<>-tester utils:l>= >=))
+  (l=</>-tester utils:l>= >=))
 
 (test l<=
-  (l=<>-tester utils:l<= <=))
+  (l=</>-tester utils:l<= <=))
 
-(defmacro l=<>x-tester (function test number)
+(defmacro l=</>x-tester (function test number)
   `(locally
      (declare (notinline ,function))
      (loop for i below 10 for lst = (make-list i :initial-element 1) do
@@ -85,46 +85,46 @@
      (signals error (,function ,number))))
 
 (test l=0
-  (l=<>x-tester utils:l=0 = 0))
+  (l=</>x-tester utils:l=0 = 0))
 
 (test l=1
-  (l=<>x-tester utils:l=1 = 1))
+  (l=</>x-tester utils:l=1 = 1))
 
 (test l=2
-  (l=<>x-tester utils:l=2 = 2))
+  (l=</>x-tester utils:l=2 = 2))
 
 (test l=3
-  (l=<>x-tester utils:l=3 = 3))
+  (l=</>x-tester utils:l=3 = 3))
 
 (test l=4
-  (l=<>x-tester utils:l=4 = 4))
+  (l=</>x-tester utils:l=4 = 4))
 
 (test l>0
-  (l=<>x-tester utils:l>0 > 0))
+  (l=</>x-tester utils:l>0 > 0))
 
 (test l>1
-  (l=<>x-tester utils:l>1 > 1))
+  (l=</>x-tester utils:l>1 > 1))
 
 (test l>2
-  (l=<>x-tester utils:l>2 > 2))
+  (l=</>x-tester utils:l>2 > 2))
 
 (test l>3
-  (l=<>x-tester utils:l>3 > 3))
+  (l=</>x-tester utils:l>3 > 3))
 
 (test l<1
-  (l=<>x-tester utils:l<1 < 1))
+  (l=</>x-tester utils:l<1 < 1))
 
 (test l<2
-  (l=<>x-tester utils:l<2 < 2))
+  (l=</>x-tester utils:l<2 < 2))
 
 (test l<3
-  (l=<>x-tester utils:l<3 < 3))
+  (l=</>x-tester utils:l<3 < 3))
 
 (test l<4
-  (l=<>x-tester utils:l<4 < 4))
+  (l=</>x-tester utils:l<4 < 4))
 
 (test l<5
-  (l=<>x-tester utils:l<5 < 5))
+  (l=</>x-tester utils:l<5 < 5))
 
 (test ll=
   (is-false (utils:ll= nil '(1)))
