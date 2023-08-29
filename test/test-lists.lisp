@@ -111,6 +111,9 @@
 (test l>3
   (l=</>x-tester utils:l>3 > 3))
 
+(test l>4
+  (l=</>x-tester utils:l>4 > 4))
+
 (test l<1
   (l=</>x-tester utils:l<1 < 1))
 
