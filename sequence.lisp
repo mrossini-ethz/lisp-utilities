@@ -248,9 +248,18 @@
         result)))
 (export 'range)
 
+(defun zeros (n &key (type 'list))
+  (make-sequence type n :initial-element 0))
+(export 'zeros)
+
+(defun ones (n &key (type 'list))
+  (make-sequence type n :initial-element 1))
+(export 'ones)
+
 (defun linspace (a b n &key (type 'list))
   (check-type n (integer 2))
   (let ((step (/ (coerce (- b a) 'double-float) (1- n))))
     (let ((result (make-sequence type n)))
       (loop for i below n do (setf (elt result i) (+ a (* i step))))
       result)))
+(export 'linspace)
