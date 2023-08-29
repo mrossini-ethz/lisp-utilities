@@ -14,6 +14,11 @@
   (= (length sequence) length))
 (export 's=)
 
+(declaim (inline s/=))
+(defun s/= (sequence length)
+  (/= (length sequence) length))
+(export 's/=)
+
 (declaim (inline s>))
 (defun s> (sequence length)
   (> (length sequence) length))
@@ -60,6 +65,31 @@
 (defun s=4 (sequence)
   (= (length sequence) 4))
 (export 's=4)
+
+(declaim (inline s/=0))
+(defun s/=0 (sequence)
+  (plusp (length sequence)))
+(export 's/=0)
+
+(declaim (inline s/=1))
+(defun s/=1 (sequence)
+  (/= (length sequence) 1))
+(export 's/=1)
+
+(declaim (inline s/=2))
+(defun s/=2 (sequence)
+  (/= (length sequence) 2))
+(export 's/=2)
+
+(declaim (inline s/=3))
+(defun s/=3 (sequence)
+  (/= (length sequence) 3))
+(export 's/=3)
+
+(declaim (inline s/=4))
+(defun s/=4 (sequence)
+  (/= (length sequence) 4))
+(export 's/=4)
 
 (declaim (inline s>0))
 (defun s>0 (sequence)
@@ -117,6 +147,11 @@
 (defun ss= (sequence-a sequence-b)
   (= (length sequence-a) (length sequence-b)))
 (export 'ss=)
+
+(declaim (inline ss/=))
+(defun ss/= (sequence-a sequence-b)
+  (/= (length sequence-a) (length sequence-b)))
+(export 'ss/=)
 
 (declaim (inline ss>))
 (defun ss> (sequence-a sequence-b)

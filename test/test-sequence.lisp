@@ -49,7 +49,7 @@
   (signals error (eval '(utils:with-lengths (n) () t)))
   (signals error (eval '(utils:with-lengths (n m) ('(1 2 3)) t))))
 
-(defmacro s=<>-tester (function test)
+(defmacro s=</>-tester (function test)
   `(locally
      (declare (notinline ,function))
      (loop for i below 6 for lst = (make-list i :initial-element 1) for vec = (make-array `(,i) :initial-element 1) for str = (make-string i :initial-element #\1) do
@@ -69,21 +69,24 @@
      (signals error (,function 3 1))))
 
 (test s=
-  (s=<>-tester utils:s= =))
+  (s=</>-tester utils:s= =))
+
+(test s/=
+  (s=</>-tester utils:s/= /=))
 
 (test s>
-  (s=<>-tester utils:s> >))
+  (s=</>-tester utils:s> >))
 
 (test s<
-  (s=<>-tester utils:s< <))
+  (s=</>-tester utils:s< <))
 
 (test s>=
-  (s=<>-tester utils:s>= >=))
+  (s=</>-tester utils:s>= >=))
 
 (test s<=
-  (s=<>-tester utils:s<= <=))
+  (s=</>-tester utils:s<= <=))
 
-(defmacro s=<>x-tester (function test number)
+(defmacro s=</>x-tester (function test number)
   `(locally
      (declare (notinline ,function))
      (loop for i below 10 for lst = (make-list i :initial-element 1) for vec = (make-array `(,i) :initial-element 1) for str = (make-string i :initial-element #\1) do
@@ -99,51 +102,66 @@
      (signals error (,function 5))))
 
 (test s=0
-  (s=<>x-tester utils:s=0 = 0))
+  (s=</>x-tester utils:s=0 = 0))
 
 (test s=1
-  (s=<>x-tester utils:s=1 = 1))
+  (s=</>x-tester utils:s=1 = 1))
 
 (test s=2
-  (s=<>x-tester utils:s=2 = 2))
+  (s=</>x-tester utils:s=2 = 2))
 
 (test s=3
-  (s=<>x-tester utils:s=3 = 3))
+  (s=</>x-tester utils:s=3 = 3))
 
 (test s=4
-  (s=<>x-tester utils:s=4 = 4))
+  (s=</>x-tester utils:s=4 = 4))
+
+(test s/=0
+  (s=</>x-tester utils:s/=0 /= 0))
+
+(test s/=1
+  (s=</>x-tester utils:s/=1 /= 1))
+
+(test s/=2
+  (s=</>x-tester utils:s/=2 /= 2))
+
+(test s/=3
+  (s=</>x-tester utils:s/=3 /= 3))
+
+(test s/=4
+  (s=</>x-tester utils:s/=4 /= 4))
 
 (test s>0
-  (s=<>x-tester utils:s>0 > 0))
+  (s=</>x-tester utils:s>0 > 0))
 
 (test s>1
-  (s=<>x-tester utils:s>1 > 1))
+  (s=</>x-tester utils:s>1 > 1))
 
 (test s>2
-  (s=<>x-tester utils:s>2 > 2))
+  (s=</>x-tester utils:s>2 > 2))
 
 (test s>3
-  (s=<>x-tester utils:s>3 > 3))
+  (s=</>x-tester utils:s>3 > 3))
 
 (test s>4
-  (s=<>x-tester utils:s>4 > 4))
+  (s=</>x-tester utils:s>4 > 4))
 
 (test s<1
-  (s=<>x-tester utils:s<1 < 1))
+  (s=</>x-tester utils:s<1 < 1))
 
 (test s<2
-  (s=<>x-tester utils:s<2 < 2))
+  (s=</>x-tester utils:s<2 < 2))
 
 (test s<3
-  (s=<>x-tester utils:s<3 < 3))
+  (s=</>x-tester utils:s<3 < 3))
 
 (test s<4
-  (s=<>x-tester utils:s<4 < 4))
+  (s=</>x-tester utils:s<4 < 4))
 
 (test s<5
-  (s=<>x-tester utils:s<5 < 5))
+  (s=</>x-tester utils:s<5 < 5))
 
-(defmacro ss=<>-tester (function test)
+(defmacro ss=</>-tester (function test)
   `(locally
      (declare (notinline ,function))
      ;; Test various combinations of sequence lengths
@@ -166,19 +184,22 @@
      (signals error (,function 3 0))))
 
 (test ss=
-  (ss=<>-tester utils:ss= =))
+  (ss=</>-tester utils:ss= =))
+
+(test ss/=
+  (ss=</>-tester utils:ss/= /=))
 
 (test ss>
-  (ss=<>-tester utils:ss> >))
+  (ss=</>-tester utils:ss> >))
 
 (test ss<
-  (ss=<>-tester utils:ss< <))
+  (ss=</>-tester utils:ss< <))
 
 (test ss>=
-  (ss=<>-tester utils:ss>= >=))
+  (ss=</>-tester utils:ss>= >=))
 
 (test ss<=
-  (ss=<>-tester utils:ss<= <=))
+  (ss=</>-tester utils:ss<= <=))
 
 (test slice-0
   (let ((n 0) (test-list '()))
