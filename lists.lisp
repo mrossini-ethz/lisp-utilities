@@ -117,6 +117,36 @@
     (and list-exhausted length-exhausted)))
 (export 'l=4)
 
+(declaim (inline l/=0))
+(defun l/=0 (list)
+  (check-type list list)
+  (consp list))
+(export 'l/=0)
+
+(declaim (inline l/=1))
+(defun l/=1 (list)
+  (check-type list list)
+  (or (null list) (consp (cdr list))))
+(export 'l/=1)
+
+(declaim (inline l/=2))
+(defun l/=2 (list)
+  (multiple-value-bind (list-exhausted length-exhausted) (l=</>-traverser list 2)
+    (not (and list-exhausted length-exhausted))))
+(export 'l/=2)
+
+(declaim (inline l/=3))
+(defun l/=3 (list)
+  (multiple-value-bind (list-exhausted length-exhausted) (l=</>-traverser list 3)
+    (not (and list-exhausted length-exhausted))))
+(export 'l/=3)
+
+(declaim (inline l/=4))
+(defun l/=4 (list)
+  (multiple-value-bind (list-exhausted length-exhausted) (l=</>-traverser list 4)
+    (not (and list-exhausted length-exhausted))))
+(export 'l/=4)
+
 (declaim (inline l>0))
 (defun l>0 (list)
   (check-type list list)

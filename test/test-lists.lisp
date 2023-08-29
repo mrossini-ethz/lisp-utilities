@@ -99,6 +99,21 @@
 (test l=4
   (l=</>x-tester utils:l=4 = 4))
 
+(test l/=0
+  (l=</>x-tester utils:l/=0 /= 0))
+
+(test l/=1
+  (l=</>x-tester utils:l/=1 /= 1))
+
+(test l/=2
+  (l=</>x-tester utils:l/=2 /= 2))
+
+(test l/=3
+  (l=</>x-tester utils:l/=3 /= 3))
+
+(test l/=4
+  (l=</>x-tester utils:l/=4 /= 4))
+
 (test l>0
   (l=</>x-tester utils:l>0 > 0))
 
