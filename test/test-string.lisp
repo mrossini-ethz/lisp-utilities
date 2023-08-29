@@ -61,6 +61,50 @@
   (is (equal (utils:strjoin "," "a" "b" "c" "d") "a,b,c,d"))
   (is (equal (utils:strjoin "<->" "a" "b" "c" "d") "a<->b<->c<->d")))
 
+(test ljust
+  (loop for j below 5 do
+    (loop for i below 5 for str = (make-string i :initial-element #\a) do
+      (is (string= (utils:ljust str j) (concatenate 'string str (make-string (max 0 (- j i)) :initial-element #\Space))))))
+  (loop for j below 5 do
+    (loop for i below 5 for str = (make-string i :initial-element #\a) do
+      (is (string= (utils:ljust str j #\0) (concatenate 'string str (make-string (max 0 (- j i)) :initial-element #\0)))))))
+
+(test rjust
+  (loop for j below 5 do
+    (loop for i below 5 for str = (make-string i :initial-element #\a) do
+      (is (string= (utils:rjust str j) (concatenate 'string (make-string (max 0 (- j i)) :initial-element #\Space) str)))))
+  (loop for j below 5 do
+    (loop for i below 5 for str = (make-string i :initial-element #\a) do
+      (is (string= (utils:rjust str j #\0) (concatenate 'string (make-string (max 0 (- j i)) :initial-element #\0) str))))))
+
+(test remove-prefix
+  (is (string= (utils:remove-prefix "" "") ""))
+  (is (string= (utils:remove-prefix "" "a") ""))
+  (is (string= (utils:remove-prefix "" "ab") ""))
+  (is (string= (utils:remove-prefix "" "abc") ""))
+  (is (string= (utils:remove-prefix "abcdefghabcdefgh" "") "abcdefghabcdefgh"))
+  (is (string= (utils:remove-prefix "abcdefghabcdefgh" "b") "abcdefghabcdefgh"))
+  (is (string= (utils:remove-prefix "abcdefghabcdefgh" "bc") "abcdefghabcdefgh"))
+  (is (string= (utils:remove-prefix "abcdefghabcdefgh" "bcd") "abcdefghabcdefgh"))
+  (is (string= (utils:remove-prefix "abcdefghabcdefgh" "a") "bcdefghabcdefgh"))
+  (is (string= (utils:remove-prefix "abcdefghabcdefgh" "ab") "cdefghabcdefgh"))
+  (is (string= (utils:remove-prefix "abcdefghabcdefgh" "abc") "defghabcdefgh"))
+  (is (string= (utils:remove-prefix "abcdefghabcdefgh" "abcd") "efghabcdefgh")))
+
+(test remove-suffix
+  (is (string= (utils:remove-suffix "" "") ""))
+  (is (string= (utils:remove-suffix "" "h") ""))
+  (is (string= (utils:remove-suffix "" "gh") ""))
+  (is (string= (utils:remove-suffix "" "fgh") ""))
+  (is (string= (utils:remove-suffix "abcdefghabcdefgh" "") "abcdefghabcdefgh"))
+  (is (string= (utils:remove-suffix "abcdefghabcdefgh" "g") "abcdefghabcdefgh"))
+  (is (string= (utils:remove-suffix "abcdefghabcdefgh" "fg") "abcdefghabcdefgh"))
+  (is (string= (utils:remove-suffix "abcdefghabcdefgh" "efg") "abcdefghabcdefgh"))
+  (is (string= (utils:remove-suffix "abcdefghabcdefgh" "h") "abcdefghabcdefg"))
+  (is (string= (utils:remove-suffix "abcdefghabcdefgh" "gh") "abcdefghabcdef"))
+  (is (string= (utils:remove-suffix "abcdefghabcdefgh" "fgh") "abcdefghabcde"))
+  (is (string= (utils:remove-suffix "abcdefghabcdefgh" "efgh") "abcdefghabcd")))
+
 (test is-empty-string
   (is (utils:empty-string-p ""))
   (is-false (utils:empty-string-p "a"))
