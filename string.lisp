@@ -100,9 +100,11 @@
 
 (defun string-replace (string old new &optional (test #'string=))
   (let ((n (length old)) (m (length new)) (i 0))
-    (do () ((not (setf i (search old string :test test :start2 i))))
-      (setf string (concatenate 'string (subseq string 0 i) new (subseq string (+ i n))))
-      (incf i m)))
+    (if (plusp n)
+        (do () ((not (setf i (search old string :test test :start2 i))))
+          (setf string (concatenate 'string (subseq string 0 i) new (subseq string (+ i n))))
+          (incf i m))
+        string))
   string)
 (export 'string-replace)
 

@@ -168,6 +168,40 @@
   (is-false (utils:substrp "bd" "abcd"))
   (is-false (utils:substrp "abcde" "abcd")))
 
+(test string-replace
+  ;; Degenerate calls
+  (is (string= (utils:string-replace "" "" "") ""))
+  (is (string= (utils:string-replace "abcdef" "" "") "abcdef"))
+  (is (string= (utils:string-replace "abcdef" "" "XYZ") "abcdef"))
+  ;; Normal calls, some without actual replacement
+  (is (string= (utils:string-replace "" "abc" "") ""))
+  (is (string= (utils:string-replace "abc" "abc" "") ""))
+  (is (string= (utils:string-replace "abd" "abc" "") "abd"))
+  (is (string= (utils:string-replace "xyz" "abc" "") "xyz"))
+  (is (string= (utils:string-replace "" "abc" "uvw") ""))
+  (is (string= (utils:string-replace "abc" "abc" "uvw") "uvw"))
+  (is (string= (utils:string-replace "abd" "abc" "uvw") "abd"))
+  (is (string= (utils:string-replace "xyz" "abc" "uvw") "xyz"))
+  ;; Replacement is shorter
+  (is (string= (utils:string-replace "abc01234567" "abc" "") "01234567"))
+  (is (string= (utils:string-replace "0123abc4567" "abc" "") "01234567"))
+  (is (string= (utils:string-replace "01234567abc" "abc" "") "01234567"))
+  ;; Replacement is exactly the same
+  (is (string= (utils:string-replace "abc01234567" "abc" "abc") "abc01234567"))
+  (is (string= (utils:string-replace "0123abc4567" "abc" "abc") "0123abc4567"))
+  (is (string= (utils:string-replace "01234567abc" "abc" "abc") "01234567abc"))
+  ;; Replacement is the same but twice
+  (is (string= (utils:string-replace "abc01234567" "abc" "abcabc") "abcabc01234567"))
+  (is (string= (utils:string-replace "0123abc4567" "abc" "abcabc") "0123abcabc4567"))
+  (is (string= (utils:string-replace "01234567abc" "abc" "abcabc") "01234567abcabc"))
+  ;; Replacement is longer
+  (is (string= (utils:string-replace "abc01234567" "abc" "abcdefghijklmnopqrstuvwxyz") "abcdefghijklmnopqrstuvwxyz01234567"))
+  (is (string= (utils:string-replace "0123abc4567" "abc" "abcdefghijklmnopqrstuvwxyz") "0123abcdefghijklmnopqrstuvwxyz4567"))
+  (is (string= (utils:string-replace "01234567abc" "abc" "abcdefghijklmnopqrstuvwxyz") "01234567abcdefghijklmnopqrstuvwxyz"))
+  ;; Multiple replacements
+  (is (string= (utils:string-replace "abc0abc1abc2abc3abc4abc5abc6abc7abc" "abc" "") "01234567"))
+  (is (string= (utils:string-replace "abc0abc1abc2abc3abc4abc5abc6abc7abc" "a" "") "bc0bc1bc2bc3bc4bc5bc6bc7bc")))
+
 (test parse-float
   ;; Nothing
   (signals error (utils:parse-float ""))
