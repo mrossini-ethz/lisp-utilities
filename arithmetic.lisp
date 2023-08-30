@@ -12,18 +12,18 @@
 
 (defun pyt (&rest numbers)
   "Computes sqrt(a^2 + b^2 + c^2 + ...) in a numerially stable way."
-  (let ((m (apply #'max (mapcar #'abs numbers))))
+  (let ((m (apply #'max 0 (mapcar #'abs numbers))))
     (if (plusp m)
-        (* m (sqrt (loop for n in numbers sum (expt (/ n m) 2))))
-        0.0)))
+        (* m (sqrt (loop for n in numbers sum (expt (/ n m) 2d0))))
+        0d0)))
 (export 'pyt)
 
 (defun ipyt (number &rest more-numbers)
   "Computes sqrt(z^2 - a^2 + b^2 + ...) in a numerially stable way."
   (let ((m (apply #'max (abs number) (mapcar #'abs more-numbers))))
     (if (not (zerop m))
-        (* m (sqrt (- (expt (/ number m) 2) (loop for n in more-numbers sum (expt (/ n m) 2)))))
-        0.0)))
+        (* m (sqrt (- (expt (/ number m) 2d0) (loop for n in more-numbers sum (expt (/ n m) 2d0)))))
+        0d0)))
 (export 'ipyt)
 
 (defun square (number)

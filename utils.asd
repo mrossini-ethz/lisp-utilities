@@ -37,7 +37,8 @@
   :components ((:file "test/test")
                (:file "test/test-lists")
                (:file "test/test-sequence")
-               (:file "test/test-string")))
+               (:file "test/test-string")
+               (:file "test/test-arithmetic")))
 
 (defmethod perform ((operation test-op) (system (eql (find-system :utils/test))))
   (funcall (intern "UTILS-TEST")))
