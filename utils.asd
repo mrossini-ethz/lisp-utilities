@@ -25,7 +25,8 @@
                (:file "arithmetic" :depends-on ("package"))
                (:file "io" :depends-on ("package"))
                (:file "import" :depends-on ("package"))
-               (:file "hash-table" :depends-on ("package")))
+               (:file "hash-table" :depends-on ("package"))
+               (:file "getopt" :depends-on ("package")))
   :in-order-to ((test-op (test-op :utils/test))))
 
 (defsystem "utils/test"
@@ -38,7 +39,8 @@
                (:file "test/test-lists")
                (:file "test/test-sequence")
                (:file "test/test-string")
-               (:file "test/test-arithmetic")))
+               (:file "test/test-arithmetic")
+               (:file "test/test-getopt")))
 
 (defmethod perform ((operation test-op) (system (eql (find-system :utils/test))))
   (funcall (intern "UTILS-TEST")))
