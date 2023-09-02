@@ -76,3 +76,10 @@
     (signals error (utils::parse-options '("--foo") optdefs))
     (signals error (utils::parse-options '("-a -f -x") optdefs))
     (signals error (utils::parse-options '("--all --full --foo") optdefs))))
+
+(test with-command-line-options
+  (let ((sb-ext:*posix-argv* '("sbcl" "-a" "-c" "3" "--full")))
+    (is (utils:with-command-line-options ((all ("a" "all") :switch) (full ("f" "full") :switch) (count ("c" "count") :argument) (delete ("d" "delete") :switch)) args all))
+    (is (utils:with-command-line-options ((all ("a" "all") :switch) (full ("f" "full") :switch) (count ("c" "count") :argument) (delete ("d" "delete") :switch)) args full))
+    (is-false (utils:with-command-line-options ((all ("a" "all") :switch) (full ("f" "full") :switch) (count ("c" "count") :argument) (delete ("d" "delete") :switch)) args delete))
+    (is (string= (utils:with-command-line-options ((all ("a" "all") :switch) (full ("f" "full") :switch) (count ("c" "count") :argument) (delete ("d" "delete") :switch)) args count) "3"))))

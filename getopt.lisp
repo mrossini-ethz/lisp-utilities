@@ -12,10 +12,9 @@
 ;;
 ;; Example:
 ;;
-;;   (with-command-line-options
-;;     ((all ("a" "all") :switch)
-;;      (full ("f" "full") :switch)
-;;      (count ("c" "count") :argument))
+;;   (with-command-line-options ((all ("a" "all") :switch)
+;;                               (full ("f" "full") :switch)
+;;                               (count ("c" "count") :argument)) arguments
 ;;     (do-stuff all full count))
 
 (defun match-option (option-str bindings)
@@ -78,5 +77,6 @@
     (unless (and (listp o) (= (list-length o) 3) (symbolp (first o)) (every #'stringp (second o)) (or (eql (third o) :switch) (eql (third o) :argument)))
       (error "Malformed option binding ~s." o)))
   `(destructuring-bind (,(mapcar #'first option-bindings) ,argument-list) (parse-options (rest sb-ext:*posix-argv*) ',option-bindings)
+     (declare (ignorable ,@(mapcar #'first option-bindings) ,argument-list))
      ,@body))
 (export 'with-command-line-options)
