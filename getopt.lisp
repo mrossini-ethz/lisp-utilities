@@ -70,13 +70,16 @@
     (list result (subseq argv i))))
 ;; not exported
 
+(define-symbol-macro *argv* #+:SBCL sb-ext:*posix-argv*)
+(export '*argv*)
+
 (defmacro with-command-line-options ((&rest option-bindings) argument-list &body body)
   "Binds the command line options described in OPTION-BINDINGS to variables for use in the body."
   ;; Check option bindings format
   (loop for o in option-bindings do
     (unless (and (listp o) (= (list-length o) 3) (symbolp (first o)) (every #'stringp (second o)) (or (eql (third o) :switch) (eql (third o) :argument)))
       (error "Malformed option binding ~s." o)))
-  `(destructuring-bind (,(mapcar #'first option-bindings) ,argument-list) (parse-options (rest sb-ext:*posix-argv*) ',option-bindings)
+  `(destructuring-bind (,(mapcar #'first option-bindings) ,argument-list) (parse-options (rest *argv*) ',option-bindings)
      (declare (ignorable ,@(mapcar #'first option-bindings) ,argument-list))
      ,@body))
 (export 'with-command-line-options)
