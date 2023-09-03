@@ -1,5 +1,18 @@
 (in-package :utils)
 
+(defmacro lambda-case ((arg &body body) &body cases)
+  (with-gensyms (fun)
+    `(let ((,fun (lambda (,arg) ,@body)))
+       (cond ,@(loop for c in cases collect (if (eql (first c) t) `(t ,@(rest c)) `((funcall ,fun ,(first c)) ,@(rest c))))))))
+
+(defmacro string-case (keystring &body cases)
+  (once-only (keystring)
+    `(cond ,@(loop for c in cases collect (if (eql t (first c)) c `((string= ,keystring ,(first c)) ,@(rest c)))))))
+
+(defmacro string-equal-case (keystring &body cases)
+  (once-only (keystring)
+    `(cond ,@(loop for c in cases collect (if (eql t (first c)) c `((string-equal ,keystring ,(first c)) ,@(rest c)))))))
+
 (defmacro case-table ((&rest keyforms) &body cases)
   ;; FIXME: Keyforms should be evaluated only once and in order!
   (let ((num (list-length keyforms)))
