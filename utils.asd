@@ -26,7 +26,8 @@
                (:file "io" :depends-on ("package"))
                (:file "import" :depends-on ("package"))
                (:file "hash-table" :depends-on ("package"))
-               (:file "getopt" :depends-on ("package")))
+               (:file "getopt" :depends-on ("package"))
+               (:file "time" :depends-on ("package" "sequence")))
   :in-order-to ((test-op (test-op :utils/test))))
 
 (defsystem "utils/test"
