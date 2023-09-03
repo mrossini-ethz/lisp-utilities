@@ -89,6 +89,39 @@
 
 ;;; Filenames
 
+(defun file-name (pathspec)
+  (let ((name (file-namestring pathspec)))
+    (if (string= name "") nil name)))
+(export 'file-name)
+
+(defun file-basename (pathspec)
+  (pathname-name pathspec))
+(export 'file-basename)
+
+(defun file-suffix (pathspec)
+  (pathname-type pathspec))
+(export 'file-suffix)
+
+(defun file-directory (pathspec)
+  (let ((dir (directory-namestring pathspec)))
+    (if (string= dir "") "./" dir)))
+(export 'file-directory)
+
+(defun filepath-split (pathspec)
+  (values (file-directory pathspec) (file-basename pathspec) (file-suffix pathspec)))
+(export 'filepath-split)
+
+(defmacro with-filepath ((dir-var file-var &optional suffix-var) pathspec &body body)
+  (let ((path (gensym)))
+    (if suffix-var
+        `(let* ((,path ,pathspec) (,dir-var (file-directory ,path)) (,file-var (file-basename ,path)) (,suffix-var (file-suffix ,path))) ,@body)
+        `(let* ((,path ,pathspec) (,dir-var (file-directory ,path)) (,file-var (file-name ,path))) ,@body))))
+(export 'with-filepath)
+
+(defun file-exists (pathspec)
+  (not (null (probe-file pathspec))))
+(export 'file-exists)
+
 (defun random-temporary-filename (&key (name-length 8) (dir "/tmp") (prefix ""))
   (loop with name while (or (not name) (probe-file name)) do
        (setf name (format nil "~a/~a~a~{~a~}" dir prefix (if (plusp (length prefix)) "-" "") (loop for i below name-length collect (code-char (+ (random 26) 97)))))

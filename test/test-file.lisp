@@ -299,3 +299,54 @@
           (setf line "nonsense"))
         (is (equal (list "hello world" "" (cat "foo bar baz" #\Return) non-ascii-chars-2) result))))))
 
+(test file-name
+  (is (null (utils:file-name "")))
+  (is (null (utils:file-name "some/dir/")))
+  (is (string= "file.1.dat" (utils:file-name "file.1.dat")))
+  (is (string= "file.1.dat" (utils:file-name "./file.1.dat")))
+  (is (string= "file.1.dat" (utils:file-name "some/dir/file.1.dat"))))
+
+(test file-basename
+  (is (null (utils:file-basename "")))
+  (is (null (utils:file-basename "some/dir/")))
+  (is (string= "file.1" (utils:file-basename "file.1.dat")))
+  (is (string= "file.1" (utils:file-basename "./file.1.dat")))
+  (is (string= "file.1" (utils:file-basename "some/dir/file.1.dat"))))
+
+(test file-suffix
+  (is (null (utils:file-suffix "")))
+  (is (null (utils:file-suffix "some/dir/")))
+  (is (string= "dat" (utils:file-suffix "file.1.dat")))
+  (is (string= "dat" (utils:file-suffix "./file.1.dat")))
+  (is (string= "dat" (utils:file-suffix "some/dir/file.1.dat"))))
+
+(test file-directory
+  (is (string= "./" (utils:file-directory "")))
+  (is (string= "some/dir/" (utils:file-directory "some/dir/")))
+  (is (string= "./" (utils:file-directory "file.1.dat")))
+  (is (string= "./" (utils:file-directory "./file.1.dat")))
+  (is (string= "some/dir/" (utils:file-directory "some/dir/file.1.dat"))))
+
+(test filepath-split
+  (is (equal '("./" nil nil) (multiple-value-list (utils:filepath-split ""))))
+  (is (equal '("some/dir/" nil nil) (multiple-value-list (utils:filepath-split "some/dir/"))))
+  (is (equal '("./" "file.1" "dat") (multiple-value-list (utils:filepath-split "file.1.dat"))))
+  (is (equal '("./" "file.1" "dat") (multiple-value-list (utils:filepath-split "./file.1.dat"))))
+  (is (equal '("some/dir/" "file.1" "dat") (multiple-value-list (utils:filepath-split "some/dir/file.1.dat")))))
+
+(test with-filepath
+  (is (equal '("./" nil nil) (utils:with-filepath (d f s) "" (list d f s))))
+  (is (equal '("some/dir/" nil nil) (utils:with-filepath (d f s) "some/dir/" (list d f s))))
+  (is (equal '("./" "file.1" "dat") (utils:with-filepath (d f s) "file.1.dat" (list d f s))))
+  (is (equal '("./" "file.1" "dat") (utils:with-filepath (d f s) "./file.1.dat" (list d f s))))
+  (is (equal '("some/dir/" "file.1" "dat") (utils:with-filepath (d f s) "some/dir/file.1.dat" (list d f s))))
+  (is (equal '("./" nil) (utils:with-filepath (d f) "" (list d f))))
+  (is (equal '("some/dir/" nil) (utils:with-filepath (d f) "some/dir/" (list d f))))
+  (is (equal '("./" "file.1.dat") (utils:with-filepath (d f) "file.1.dat" (list d f))))
+  (is (equal '("./" "file.1.dat") (utils:with-filepath (d f) "./file.1.dat" (list d f))))
+  (is (equal '("some/dir/" "file.1.dat") (utils:with-filepath (d f) "some/dir/file.1.dat" (list d f)))))
+
+(test file-exists
+  (is (null (utils:file-exists "this-file-does-not-exist")))
+  (with-hexfile (f "68 65 6c 6c 6f 20 77 6f 72 6c 64 0a 0a 66 6f 6f 20 62 61 72 20 62 61 7a 0a c3 a4 c3 b6 c3 bc c2 b5 cf 83 0a") ; utf-8, LF
+    (is (utils:file-exists f))))
