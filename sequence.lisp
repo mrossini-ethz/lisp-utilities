@@ -233,6 +233,10 @@
     result))
 (export 'remove-if-index)
 
+(defun elements (sequence &rest indices)
+  (loop for i in indices collect (elt sequence i)))
+(export 'elements)
+
 (defun range (a &optional b (step 1) (type 'list))
   (unless b
     (setf b a)
