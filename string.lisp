@@ -42,9 +42,18 @@
       (setf result (concatenate 'string result separator str)))))
 (export 'strjoin)
 
-(defun newline-join (&rest strings)
-  (apply #'strjoin (append (list (make-string 1 :initial-element #\newline)) strings)))
-(export 'newline-join)
+(defun tabulator ()
+  #.(string #\Tab))
+(export 'tabulator)
+
+(defun newline (&optional (eol-style :native))
+  (case eol-style
+    (:LF #.(string #\Newline))
+    (:unix #.(string #\Newline))
+    (:CRLF #.(concatenate 'string (string #\Return) (string #\Newline)))
+    (:windows #.(concatenate 'string (string #\Return) (string #\Newline)))
+    (:native #.(concatenate 'string #+WIN32 (string #\Return) (string #\Newline)))))
+(export 'newline)
 
 (defun empty-string-p (str)
   (and (stringp str) (zerop (length str))))
