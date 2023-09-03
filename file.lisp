@@ -1,62 +1,101 @@
 (in-package :utils)
 
-(defun read-file-to-string (filename)
-  ;; Reads an entire file into a string
-  (with-open-file (f filename)
-    (let ((content (make-string (file-length f))))
-      (read-sequence content f)
-      content)))
+;;; File <-> String (text)
+
+(defun read-file-to-string (filename &key (encoding :utf-8))
+  "Reads an entire text file into a string."
+  (with-open-file (f filename :external-format encoding)
+    (let* ((n (file-length f)) (content (make-string n)) (m (read-sequence content f)))
+      (if (= n m) content (subseq content 0 m)))))
 (export 'read-file-to-string)
 
-(defun read-lines-to-vector (filename &optional (trim-eol t))
-  ;; Reads the lines of a file into a vector
-  (with-open-file (f filename)
-    (apply #'vector (loop for line = (read-line f nil nil) while line collect (if trim-eol (string-right-trim '(#\Newline #\Return) line) line)))))
-(export 'read-lines-to-linevector)
-
-(defun write-file-from-string (filename content &key if-exists if-does-not-exist)
-  "Writes content into a file."
-  (with-open-file (file filename :direction :output :if-exists if-exists :if-does-not-exist if-does-not-exist)
+(defun write-file-from-string (filename content &key (if-exists :supersede) (if-does-not-exist :create) (encoding :utf-8))
+  "Writes content into a text file."
+  (with-open-file (file filename :direction :output :if-exists if-exists :if-does-not-exist if-does-not-exist :external-format encoding)
     (write-sequence content file)))
 (export 'write-file-from-string)
 
-(defun write-file-from-lines (filename line-seq &key (if-exists :error) (if-does-not-exist :create))
-  "Writes the sequence of lines into a file."
-  (with-open-file (file filename :direction :output :if-exists if-exists :if-does-not-exist if-does-not-exist)
+(defun update-file-from-string (path content &key (if-does-not-exist :create) (encoding :utf-8))
+  "Updates a text file only if the new content is different."
+  (let (previous-content)
+    ;; Read possibly existing file for comparison with new content
+    (setf previous-content (read-file-to-string path :encoding encoding)) ;; FIXME: problem when file does not exist
+    ;; Write new content if it is not identical
+    (unless (string= previous-content content)
+      (write-file-from-string path content :if-exists :supersede :if-does-not-exist if-does-not-exist :encoding encoding))))
+(export 'update-file-from-string)
+
+;;; File <-> Sequence of lines (text)
+
+(defun remove-trailing-carriage-return (line)
+  (let ((n (length line)))
+    (if (and (plusp n) (char= (elt line (1- n)) #\Return))
+        (subseq line 0 (1- n))
+        line)))
+;; not exported
+
+(defun read-file-to-lines (filename &key (encoding :utf-8))
+  "Reads a text file into a list of lines (without end-of-line characters)."
+  (with-open-file (f filename :external-format encoding)
+    (loop for line = (read-line f nil nil) while line collect (remove-trailing-carriage-return line))))
+(export 'read-file-to-lines)
+
+(defun write-file-from-lines (filename line-seq &key (if-exists :supersede) (if-does-not-exist :create) (encoding :utf-8) (eol-style :native))
+  "Writes a sequence of lines into a text file."
+  (with-open-file (file filename :direction :output :if-exists if-exists :if-does-not-exist if-does-not-exist :external-format encoding)
     (loop for i below (length line-seq) do
-      (write-line (elt line-seq i) file))))
+      (write-string (elt line-seq i) file)
+      (case eol-style
+        (:LF (write-char #\Newline file))
+        (:unix (write-char #\Newline file))
+        (:CRLF (write-char #\Return file) (write-char #\Newline file))
+        (:windows (write-char #\Return file) (write-char #\Newline file))
+        (:native #+WIN32 (write-char #\Return file) (write-char #\Newline file))))))
 (export 'write-file-from-lines)
 
-(defmacro for-line-in-stream ((var stream &key (trim-eol t)) &body body)
+;;; File <-> Vector (binary data)
+
+(defun read-file-to-vector (filename)
+  "Reads binary data from a file into a vector."
+  (with-open-file (f filename :element-type '(unsigned-byte 8))
+    (let ((content (make-array (list (file-length f)))))
+      (read-sequence content f)
+      content)))
+(export 'read-file-to-vector)
+
+(defun write-file-from-vector (filename content &key (if-exists :supersede) (if-does-not-exist :create))
+  "Writes binary data from a vector of bytes into a file."
+  (with-open-file (f filename :direction :output :if-exists if-exists :if-does-not-exist if-does-not-exist :element-type '(unsigned-byte 8))
+      (write-sequence content f)))
+(export 'write-file-from-vector)
+
+;;; Iterators
+
+(defmacro for-line-in-stream ((var stream) &body body)
+  "Iterates over lines in a text stream."
   (let ((handle (gensym)))
     `(let ((,handle ,stream))
-       (do (,var) ((not (setf ,var (read-line ,handle nil))))
-         ,@(if trim-eol `((setf ,var (string-right-trim '(#\Newline #\Return) ,var))))
+       (do (,var) ((not (setf ,var (remove-trailing-carriage-return (read-line ,handle nil)))))
          ,@body))))
-(export 'for-linesin-stream)
+(export 'for-line-in-stream)
 
-(defmacro for-line-in-file ((var filename &key (trim-eol t)) &body body)
+(defmacro for-line-in-file ((var filename &key (encoding :utf-8)) &body body)
+  "Iterates over lines in a text file."
   (let ((handle (gensym)))
-    `(with-open-file (,handle ,filename)
-       (for-line-in-stream (,var ,handle :trim-eol ,trim-eol)
+    `(with-open-file (,handle ,filename :external-format ,encoding)
+       (for-line-in-stream (,var ,handle)
          ,@body))))
 (export 'for-line-in-file)
 
-(defun update-file-from-string (path content &key (if-does-not-exist :create))
-  "Updates a file only if the new content is different."
-  (let (previous-content)
-    ;; Read possibly existing file for comparison with new content
-    (setf previous-content (read-file-to-string path)) ;; FIXME: problem when file does not exits
-    ;; Write new content if it is not identical
-    (unless (string= previous-content content)
-      (write-file-from-string path content :if-exists :overwrite :if-does-not-exist if-does-not-exist))))
-(export 'update-file-from-string)
+;;; Filenames
 
 (defun random-temporary-filename (&key (name-length 8) (dir "/tmp") (prefix ""))
   (loop with name while (or (not name) (probe-file name)) do
        (setf name (format nil "~a/~a~a~{~a~}" dir prefix (if (plusp (length prefix)) "-" "") (loop for i below name-length collect (code-char (+ (random 26) 97)))))
        finally (return name)))
 (export 'random-temporary-filename)
+
+;;; Directories
 
 (defun directory-recurse (directory function)
   (let ((content (sort (directory (concatenate 'string directory "/" "*.*")) #'string< :key #'namestring)))
