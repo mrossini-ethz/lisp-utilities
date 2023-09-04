@@ -43,7 +43,9 @@
                (:file "test/test-string")
                (:file "test/test-arithmetic")
                (:file "test/test-getopt")
-               (:file "test/test-file")))
+               (:file "test/test-file")
+               (:file "test/test-anaphoric")
+               (:file "test/test-iteration")))
 
 (defmethod perform ((operation test-op) (system (eql (find-system :utils/test))))
   (funcall (intern "UTILS-TEST")))

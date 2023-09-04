@@ -1,29 +1,28 @@
 (in-package :utils)
 
-(defmacro with-escape (escape-symbol &body body)
+(defmacro with-escape (escape-symbol return-value &body body)
   "Defines a block and a symbol macro to escape from the block"
   (with-gensyms (tag)
-    `(symbol-macrolet ((,escape-symbol (return-from ,tag)))
+    `(symbol-macrolet ((,escape-symbol (return-from ,tag ,return-value)))
        (block ,tag
          ,@body))))
 (export 'with-escape)
 
 (defmacro for-range ((var a &optional (b nil b-supplied-p) (step 1)) &body body)
   (unless b-supplied-p
-    (setf b a)
-    (setf a 0))
-  (once-only (a b step)
-    `(cond
-       ((and (< ,a ,b) (plusp ,step))
-        (do ((,var ,a (+ ,var ,step))) ((>= ,var ,b)) ,@body))
-       ((and (> ,a ,b) (minusp ,step))
-        (do ((,var ,a (+ ,var ,step))) ((<= ,var ,b)) ,@body))
-       (t (error "Invalid range")))))
+    (setf b a a 0))
+  (with-interned-symbols (continue break)
+    (once-only (a b step)
+      `(with-escape ,break ,var
+         (do ((,var ,a (+ ,var ,step))) ((or (zerop ,step) (and (plusp ,step) (>= ,var ,b)) (and (minusp ,step) (<= ,var ,b))) ,var)
+           (with-escape ,continue ,var ,@body))))))
+(export 'for-range)
 
 (defmacro foreach ((item sequence) &body body)
   "Iterates over each sequence item and executes the given code."
-  `(with-escape break
-     (map nil (lambda (,item) (with-escape continue ,@body)) ,sequence)))
+  (with-interned-symbols (continue break)
+    `(with-escape ,break ,item
+       (map nil (lambda (,item) (with-escape ,continue ,item ,@body)) ,sequence))))
 (export 'foreach)
 
 (defmacro enumerate ((index item) sequence &body body)
@@ -55,9 +54,9 @@
 (export 'enumerate-zip)
 
 (defmacro until (condition &body body)
-  `(with-escape break
+  `(with-escape break nil
      (do () (,condition)
-       (with-escape continue ,@body))))
+       (with-escape continue nil ,@body))))
 (export 'until)
 
 (defmacro while (condition &body body)
@@ -66,19 +65,19 @@
 (export 'while)
 
 (defmacro do-until (condition &body body)
-  `(with-escape break
+  `(with-escape break nil
      (progn
-       (with-escape continue ,@body)
+       (with-escape continue nil ,@body)
        (do () (,condition)
-         (with-escape continue ,@body)))))
+         (with-escape continue nil ,@body)))))
 (export 'do-until)
 
 (defmacro do-while (condition &body body)
-  `(with-escape break
+  `(with-escape break nil
      (progn
-       (with-escape continue ,@body)
+       (with-escape continue nil ,@body)
        (do () ((not ,condition))
-         (with-escape continue ,@body)))))
+         (with-escape continue nil ,@body)))))
 (export 'do-while)
 
 (defmacro while-let (variable condition expression &body body)
