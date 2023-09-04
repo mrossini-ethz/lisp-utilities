@@ -17,3 +17,8 @@
           ,(let (,@(loop for n in names for g in gensyms collect `(,n ,g)))
                 ,@body)))))
 (export 'once-only)
+
+(defmacro with-interned-symbols ((&rest symbols) &body body)
+  `(let ,(loop for s in symbols collect `(,s (intern (symbol-name ',s))))
+     ,@body))
+(export 'with-interned-symbols)
