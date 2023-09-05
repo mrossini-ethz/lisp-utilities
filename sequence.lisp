@@ -208,6 +208,13 @@
   (some #'(lambda (x) (funcall test item (funcall key x))) sequence))
 (export 'have)
 
+(defun sequence-like (sequence length &key (initial-element nil initial-p))
+  (cond
+    ((and (listp sequence) initial-p) (make-list length :initial-element initial-element))
+    ((listp sequence) (make-list length))
+    ((and (vectorp sequence) initial-p) (make-array `(,length) :element-type (array-element-type sequence) :initial-element initial-element))
+    ((vectorp sequence) (make-array `(,length) :element-type (array-element-type sequence)))))
+
 (defun remove-nth (n sequence)
   (let ((len (length sequence)))
     (when (or (minusp n) (>= n len))
