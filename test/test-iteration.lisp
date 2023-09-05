@@ -134,7 +134,7 @@
   (with-var= ((x nil (equal '() x)))
     (utils:foreach (i #()) (setf x (append x (list i)))))
   (with-var= ((x "" (string= "" x)))
-    (utils:foreach (i "") (concatenate #'string x (string i))))
+    (utils:foreach (i "") (concatenate 'string x (string i))))
   ;; Change itarated variable
   (with-var= ((x 0 (= 0 x)))
     (utils:foreach (i '()) (incf i) (incf x i)))
@@ -144,9 +144,9 @@
   ;; Nonempty sequence
 
   ;; Return value
-  (is (null (utils:foreach (i '(1 2 3 4 5)) nil))) ; FIXME
-  (is (null (utils:foreach (i #(5 6 7 8 9)) nil))) ; FIXME
-  (is (null (utils:foreach (i "abcde") nil))) ; FIXME
+  (is (= 5 (utils:foreach (i '(1 2 3 4 5)) nil)))
+  (is (= 9 (utils:foreach (i #(5 6 7 8 9)) nil)))
+  (is (char= #\e (utils:foreach (i "abcde") nil)))
   ;; Sum iterated variable
   (with-var= ((x 0 (= 15 x)))
     (utils:foreach (i '(1 2 3 4 5)) (incf x i)))

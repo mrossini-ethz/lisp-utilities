@@ -19,11 +19,39 @@
              (with-escape ,continue ,itervar (let ((,var ,itervar)) (declare (ignorable ,var)) ,@body))))))))
 (export 'for-range)
 
+(defun list-iterator (list)
+  (lambda ()
+    (multiple-value-prog1 (if list (values (car list) t))
+      (setf list (cdr list)))))
+
+(defun vector-iterator (vector)
+  (let ((pos 0) (len (length vector)))
+    (lambda ()
+      (multiple-value-prog1 (if (< pos len) (values (elt vector pos) t))
+        (incf pos)))))
+
+(defun sequence-iterator (sequence)
+  (if (listp sequence)
+      (list-iterator sequence)
+      (vector-iterator sequence)))
+
+(defmacro loop-iterator ((var iterator) &body body)
+  (once-only (iterator)
+    (with-gensyms (fun proceed last)
+      `(let (,last)
+         (labels ((,fun ()
+                    (multiple-value-bind (,var ,proceed)  (funcall ,iterator)
+                      (declare (ignorable ,var))
+                      (if ,proceed (progn ,@body (setf ,last ,var) (,fun)) ,last))))
+           (,fun))))))
+
 (defmacro foreach ((item sequence) &body body)
   "Iterates over each sequence item and executes the given code."
   (with-interned-symbols (continue break)
-    `(with-escape ,break ,item
-       (map nil (lambda (,item) (declare (ignorable ,item)) (with-escape ,continue ,item ,@body)) ,sequence))))
+    (with-gensyms (iterator)
+      `(let ((,iterator (sequence-iterator ,sequence)))
+         (with-escape ,break ,item
+           (loop-iterator (,item ,iterator) (with-escape ,continue ,item ,@body)))))))
 (export 'foreach)
 
 (defmacro enumerate ((index item) sequence &body body)
