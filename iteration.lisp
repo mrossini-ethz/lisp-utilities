@@ -23,7 +23,7 @@
   "Iterates over each sequence item and executes the given code."
   (with-interned-symbols (continue break)
     `(with-escape ,break ,item
-       (map nil (lambda (,item) (with-escape ,continue ,item ,@body)) ,sequence))))
+       (map nil (lambda (,item) (declare (ignorable ,item)) (with-escape ,continue ,item ,@body)) ,sequence))))
 (export 'foreach)
 
 (defmacro enumerate ((index item) sequence &body body)

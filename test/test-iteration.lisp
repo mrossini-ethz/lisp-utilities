@@ -115,3 +115,55 @@
   ;; Float
   (with-var= ((x nil (equal (loop for f downfrom 5d0 above -5d0 by 0.125d0 collect f) x)))
     (utils:for-range (f 5d0 -5d0 -0.125d0) (setf x (append x (list f))))))
+
+(test foreach
+  ;; Empty sequence
+
+  ;; Return value
+  (is (null (utils:foreach (i '()) nil)))
+  (is (null (utils:foreach (i #()) nil)))
+  (is (null (utils:foreach (i "") nil)))
+  ;; Sum iterated variable
+  (with-var= ((x 0 (= 0 x)))
+    (utils:foreach (i '()) (incf x i)))
+  (with-var= ((x 0 (= 0 x)))
+    (utils:foreach (i #()) (incf x i)))
+  ;; Collect iterated variable
+  (with-var= ((x nil (equal '() x)))
+    (utils:foreach (i '()) (setf x (append x (list i)))))
+  (with-var= ((x nil (equal '() x)))
+    (utils:foreach (i #()) (setf x (append x (list i)))))
+  (with-var= ((x "" (string= "" x)))
+    (utils:foreach (i "") (concatenate #'string x (string i))))
+  ;; Change itarated variable
+  (with-var= ((x 0 (= 0 x)))
+    (utils:foreach (i '()) (incf i) (incf x i)))
+  (with-var= ((x 0 (= 0 x)))
+    (utils:foreach (i #()) (incf i) (incf x i)))
+
+  ;; Nonempty sequence
+
+  ;; Return value
+  (is (null (utils:foreach (i '(1 2 3 4 5)) nil))) ; FIXME
+  (is (null (utils:foreach (i #(5 6 7 8 9)) nil))) ; FIXME
+  (is (null (utils:foreach (i "abcde") nil))) ; FIXME
+  ;; Sum iterated variable
+  (with-var= ((x 0 (= 15 x)))
+    (utils:foreach (i '(1 2 3 4 5)) (incf x i)))
+  (with-var= ((x 0 (= 35 x)))
+    (utils:foreach (i #(5 6 7 8 9)) (incf x i)))
+  ;; Collect iterated variable
+  (with-var= ((x nil (equal '(1 2 3 4 5) x)))
+    (utils:foreach (i '(1 2 3 4 5)) (setf x (append x (list i)))))
+  (with-var= ((x nil (equal '(5 6 7 8 9) x)))
+    (utils:foreach (i #(5 6 7 8 9)) (setf x (append x (list i)))))
+  (with-var= ((x "" (string= "abcdef" x)))
+    (utils:foreach (i "abcdef") (setf x (concatenate 'string x (string i)))))
+  ;; Change itarated variable
+  (with-var= ((x 0 (= 20 x)))
+    (utils:foreach (i '(1 2 3 4 5)) (incf i) (incf x i)))
+  (with-var= ((x 0 (= 40 x)))
+    (utils:foreach (i #(5 6 7 8 9)) (incf i) (incf x i)))
+
+  ;; FIXME
+  )
