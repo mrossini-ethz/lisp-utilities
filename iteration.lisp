@@ -12,10 +12,11 @@
   (unless b-supplied-p
     (setf b a a 0))
   (with-interned-symbols (continue break)
-    (once-only (a b step)
-      `(with-escape ,break ,var
-         (do ((,var ,a (+ ,var ,step))) ((or (zerop ,step) (and (plusp ,step) (>= ,var ,b)) (and (minusp ,step) (<= ,var ,b))) ,var)
-           (with-escape ,continue ,var ,@body))))))
+    (with-gensyms (itervar)
+      (once-only (a b step)
+        `(with-escape ,break ,itervar
+           (do ((,itervar ,a (+ ,itervar ,step))) ((or (zerop ,step) (and (plusp ,step) (>= ,itervar ,b)) (and (minusp ,step) (<= ,itervar ,b))) ,itervar)
+             (with-escape ,continue ,itervar (let ((,var ,itervar)) (declare (ignorable ,var)) ,@body))))))))
 (export 'for-range)
 
 (defmacro foreach ((item sequence) &body body)

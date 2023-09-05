@@ -346,7 +346,7 @@
   (is (equal '("./" "file.1.dat") (utils:with-filepath (d f) "./file.1.dat" (list d f))))
   (is (equal '("some/dir/" "file.1.dat") (utils:with-filepath (d f) "some/dir/file.1.dat" (list d f)))))
 
-(test file-exists
-  (is (null (utils:file-exists "this-file-does-not-exist")))
+(test file-exists-p
+  (is (null (utils:file-exists-p "this-file-does-not-exist")))
   (with-hexfile (f "68 65 6c 6c 6f 20 77 6f 72 6c 64 0a 0a 66 6f 6f 20 62 61 72 20 62 61 7a 0a c3 a4 c3 b6 c3 bc c2 b5 cf 83 0a") ; utf-8, LF
-    (is (utils:file-exists f))))
+    (is (utils:file-exists-p f))))

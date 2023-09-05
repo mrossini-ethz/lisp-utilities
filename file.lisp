@@ -118,9 +118,9 @@
         `(let* ((,path ,pathspec) (,dir-var (file-directory ,path)) (,file-var (file-name ,path))) ,@body))))
 (export 'with-filepath)
 
-(defun file-exists (pathspec)
+(defun file-exists-p (pathspec)
   (not (null (probe-file pathspec))))
-(export 'file-exists)
+(export 'file-exists-p)
 
 (defun random-temporary-filename (&key (name-length 8) (dir "/tmp") (prefix ""))
   (loop with name while (or (not name) (probe-file name)) do
