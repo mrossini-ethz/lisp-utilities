@@ -19,10 +19,28 @@
              (with-escape ,continue ,itervar (let ((,var ,itervar)) (declare (ignorable ,var)) ,@body))))))))
 (export 'for-range)
 
-(defun list-iterator (list)
-  (lambda ()
-    (multiple-value-prog1 (if list (values (car list) t))
-      (setf list (cdr list)))))
+(defun list-iterator (list &optional (start 0) (stop #.most-positive-fixnum) (step 1))
+  ;; Move to start position if necessary
+  (when (plusp start)
+    (setf list (nthcdr start list))
+    (setf stop (- stop start)))
+  ;; Differentiate stepping cases for more efficiency
+  (cond
+    ((= step 1)
+     (let ((pos 0))
+       (declare (fixnum pos stop))
+       (lambda ()
+         (declare (optimize (speed 3) (safety 0)))
+         (multiple-value-prog1 (if (and list (< pos stop)) (values (car list) t))
+           (setf list (cdr list))
+           (incf pos)))))
+    ((and (integerp step) (> step 1))
+     (let ((pos 0))
+       (declare (fixnum pos stop step))
+       (lambda ()
+         (multiple-value-prog1 (if (and list (< pos stop)) (values (car list) t))
+           (setf list (nthcdr step list) pos (+ pos step))))))
+    (t (error "Invalid list iterator arguments."))))
 
 (defun vector-iterator (vector)
   (let ((pos 0) (len (length vector)))
