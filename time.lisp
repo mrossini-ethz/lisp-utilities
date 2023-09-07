@@ -1,19 +1,15 @@
 (in-package :utils)
 
-(defun timestamp-elements ()
-  (multiple-value-bind (second minute hour date month year day daylight zone) (get-decoded-time)
-    (declare (ignore day daylight zone))
-    (list
-     (format nil "~2,'0d" second)
-     (format nil "~2,'0d" minute)
-     (format nil "~2,'0d" hour)
-     (format nil "~2,'0d" date)
-     (format nil "~2,'0d" month)
-     (format nil "~4,'0d" year))))
+(defun timestamp-fmt (&rest elements)
+  (let ((elts (multiple-value-list (get-decoded-time))))
+    (apply #'concatenate 'string (loop for e in elements collect (format nil "~2,'0d" (nth e elts))))))
 ;; not exported
 
 (defun timestamp (&optional (format "YYYYMMDDhhmmss"))
   (cond
-    ((string= format "YYYYMMDDhhmmss") (apply #'concatenate 'string (elements (timestamp-elements) 5 4 3 2 1 0)))
+    ((string= format "YYYYMMDDhhmmss") (timestamp-fmt 5 4 3 2 1 0))
+    ((string= format "YYYYMMDD") (timestamp-fmt 5 4 3))
+    ((string= format "hhmmss") (timestamp-fmt 2 1 0))
+    ((string= format "hhmm") (timestamp-fmt 2 1))
     (t (error "Unknown format ~a" format))))
 (export 'timestamp)
