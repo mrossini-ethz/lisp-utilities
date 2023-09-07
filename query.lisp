@@ -28,7 +28,7 @@
 (export 'query-integer)
 
 (defun query-string (prompt &key trim empty)
-  (loop for input = (prompt-and-read prompt) while (or empty (empty-string-p (if trim (strtrim input) input))) finally (return input)))
+  (loop for input = (prompt-and-read prompt) while (or empty (= (length (if trim (string-trim '(#\newline #\return #\space #\tab) input) input)) 0)) finally (return input)))
 (export 'query-string)
 
 (defun query-choice (prompt default &rest items)
@@ -39,12 +39,3 @@
         (query-integer (format nil "Choice: ") :default default :min 1 :max (length items))
         (query-integer (format nil "Choice: ") :min 1 :max (length items)))))
 (export 'query-choice)
-
-(defun query-text (file &key text)
-  (let ((editor (sb-ext:posix-getenv "EDITOR")) process)
-    (when text
-      (write-file-from-string file text :if-does-not-exist :create))
-    (loop until (and process (zerop (sb-ext:process-exit-code process))) do
-         (setf process (sb-ext:run-program editor (list file) :search t :wait t :output t :input t :error t)))
-    (read-file-to-string file)))
-(export 'query-text)
