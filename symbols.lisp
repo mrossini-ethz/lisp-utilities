@@ -15,5 +15,5 @@
 
 ;; Graham
 (defun symb (&rest args)
-  (values (intern (apply #'mkstr args))))
+  (values (intern (apply (lambda (&rest args) (with-output-to-string (s) (dolist (arg args) (princ arg s)))) args))))
 (export 'symb)
